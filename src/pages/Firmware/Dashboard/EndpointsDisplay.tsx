@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Heading, Table, Tbody, Td, Th, Thead, Tooltip, Tr } from '@chakra-ui/react';
+import { Heading, Table, Tbody, Td, Th, Thead, Tooltip, Tr, Box } from '@chakra-ui/react';
 import { Info } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuid } from 'uuid';
@@ -15,32 +15,38 @@ const FirmwareDashboardEndpointDisplay = ({ data }: Props) => {
   const { t } = useTranslation();
 
   return (
-    <Card w="100%">
-      <CardHeader>
-        <Heading mr={2} my="auto" size="md">
-          {t('controller.firmware.endpoints')}
-        </Heading>
-        <Tooltip label={t('controller.firmware.endpoints_explanation')} hasArrow>
-          <Info style={{ marginTop: 'auto', marginBottom: 'auto' }} />
-        </Tooltip>
-      </CardHeader>
-      <CardBody>
-        <Table>
-          <Thead>
+    <Card w={{ base: '100%', md: 'auto' }}>
+  <CardHeader display="flex" flexWrap={{ base: 'wrap', md: 'nowrap' }}>
+    <Heading mr={2} my="auto" size="md">
+      {t('controller.firmware.endpoints')}
+    </Heading>
+    <Tooltip label={t('controller.firmware.endpoints_explanation')} hasArrow>
+      <Info style={{ marginTop: 'auto', marginBottom: 'auto' }} />
+    </Tooltip>
+  </CardHeader>
+
+  <CardBody>
+    <Box overflowX="auto">
+      <Table>
+        <Thead>
+          <Tr>
             <Th>{t('system.endpoint')}</Th>
             <Th>{t('devices.title')}</Th>
-          </Thead>
-          <Tbody>
-            {data.map(({ value, tag }) => (
-              <Tr key={uuid()}>
-                <Td>{tag}</Td>
-                <Td>{value}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </CardBody>
-    </Card>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map(({ value, tag }) => (
+            <Tr key={uuid()}>
+              <Td>{tag}</Td>
+              <Td>{value}</Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </Box>
+  </CardBody>
+</Card>
+
   );
 };
 

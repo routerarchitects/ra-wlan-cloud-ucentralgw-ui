@@ -49,7 +49,6 @@ const MonitoringSystemCard = ({ endpoint, token }: Props) => {
   const { colorMode } = useColorMode();
   const [cumulativeData, setCumulativeData] = React.useState<(SystemResources & { timestamp: Date })[]>([]);
   const breakpoint = useBreakpoint();
-
   const isVertical = React.useMemo(
     () => breakpoint === 'base' || breakpoint === 'sm' || breakpoint === 'md',
     [breakpoint],
@@ -211,7 +210,7 @@ const MonitoringSystemCard = ({ endpoint, token }: Props) => {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md" pt={0}>
+        <Heading size="md" pt={0} fontSize={{ base: 'md', md: 'lg' }}>
           {endpoint.type}
         </Heading>
       </CardHeader>
@@ -219,7 +218,9 @@ const MonitoringSystemCard = ({ endpoint, token }: Props) => {
         {isVertical ? (
           <Box w="100%" display="block">
             <Box mb={4}>
-              <Heading size="sm">Real Memory (Peak: {bytesString(getResources.data?.peakRealMem ?? 0)})</Heading>
+              <Heading size="sm" fontSize={{ base: 'sm', md: 'md' }}>
+                Real Memory (Peak: {bytesString(getResources.data?.peakRealMem ?? 0)})
+              </Heading>
               <Box position="relative" w="100%">
                 <Line
                   options={options(data.realMemFactor.factor, data.realMemFactor.unit)}
@@ -228,7 +229,9 @@ const MonitoringSystemCard = ({ endpoint, token }: Props) => {
               </Box>
             </Box>
             <Box>
-              <Heading size="sm">Virtual Memory (Peak: {bytesString(getResources.data?.peakVirtMem ?? 0)})</Heading>
+              <Heading size="sm" fontSize={{ base: 'sm', md: 'md' }}>
+                Virtual Memory (Peak: {bytesString(getResources.data?.peakVirtMem ?? 0)})
+              </Heading>
               <Box position="relative" w="100%">
                 <Line
                   options={options(data.virtualMemFactor.factor, data.virtualMemFactor.unit)}
@@ -237,7 +240,9 @@ const MonitoringSystemCard = ({ endpoint, token }: Props) => {
               </Box>
             </Box>
             <Box>
-              <Heading size="sm">File Descriptors</Heading>
+              <Heading size="sm" fontSize={{ base: 'sm', md: 'md' }}>
+                File Descriptors
+              </Heading>
               <Box position="relative" w="100%">
                 <Line options={options()} data={{ ...data, datasets: [data.datasets[2]] }} height={180} />
               </Box>

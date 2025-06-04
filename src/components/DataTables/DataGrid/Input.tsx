@@ -28,7 +28,7 @@ const DataGridControls = <T extends object>({ table, isDisabled }: Props<T>) => 
   const isCompact = dimensions.width !== 0 && dimensions.width <= 800;
 
   return (
-    <Flex ref={ref} justifyContent="space-between" m={4} alignItems="center">
+    <Flex m={4} mx={{ base: 0, md: 4 }} ref={ref} justifyContent="space-between" alignItems="center">
       <Flex>
         <Tooltip label={t('table.first_page')}>
           <IconButton
@@ -36,7 +36,7 @@ const DataGridControls = <T extends object>({ table, isDisabled }: Props<T>) => 
             onClick={() => table.setPageIndex(0)}
             isDisabled={isDisabled || !table.getCanPreviousPage()}
             icon={<ArrowLeftIcon h={3} w={3} />}
-            mr={4}
+            mr={{base:1, md:4}}
           />
         </Tooltip>
         <Tooltip label={t('table.previous_page')}>
@@ -113,7 +113,7 @@ const DataGridControls = <T extends object>({ table, isDisabled }: Props<T>) => 
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             isDisabled={isDisabled || !table.getCanNextPage()}
             icon={<ArrowRightIcon h={3} w={3} />}
-            ml={4}
+            ml={{base:1, md:4}}
           />
         </Tooltip>
       </Flex>

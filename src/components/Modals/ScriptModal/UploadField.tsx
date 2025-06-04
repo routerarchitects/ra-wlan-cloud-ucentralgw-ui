@@ -31,22 +31,22 @@ const ScriptUploadField = ({ isDisabled }: Props) => {
       <FormLabel ms={0} mb={0} fontSize="md" fontWeight="normal" _disabled={{ opacity: 0.8 }}>
         {t('script.upload_destination')}
       </FormLabel>
-      <Flex h="40px">
+      <Flex h="auto">
         <RadioGroup
           onChange={onRadioChange}
           defaultValue={value === undefined ? '0' : '1'}
           _disabled={{ opacity: 0.8 }}
         >
-          <Stack spacing={5} direction="row">
+          <Stack spacing={2} direction={{base: "column", md: "row"}} mb={5}>
             <Radio colorScheme="blue" value="0">
               {t('script.automatic')}
             </Radio>
             <Radio colorScheme="green" value="1">
-              <Flex>
-                <Text my="auto" mr={2} w="180px">
-                  {t('script.custom_domain')}
-                </Text>
-                <InputGroup>
+              <Text my="auto" mr={2} w="180px">
+                {t('script.custom_domain')}
+              </Text>
+            </Radio>
+            <InputGroup mr={2}>
                   <Input
                     value={value}
                     onChange={(e) => onChange(e.target.value)}
@@ -59,8 +59,6 @@ const ScriptUploadField = ({ isDisabled }: Props) => {
                     _disabled={{ opacity: 0.8 }}
                   />
                 </InputGroup>
-              </Flex>
-            </Radio>
           </Stack>
         </RadioGroup>
       </Flex>

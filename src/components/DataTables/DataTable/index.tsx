@@ -213,7 +213,7 @@ const _DataTable = <TValue extends object>({
   // Render the UI for your table
   return (
     <>
-      <Box minHeight={computedMinHeight()} position="relative">
+      <Box overflowX="auto" minHeight={computedMinHeight()} position="relative">
         <LoadingOverlay isLoading={isManual !== undefined && isManual && isLoading !== undefined && isLoading}>
           <Table {...getTableProps()} size="small" textColor={textColor} w="100%">
             <Thead fontSize="14px">
@@ -342,7 +342,7 @@ const _DataTable = <TValue extends object>({
         </LoadingOverlay>
       </Box>
       {!hideControls && (
-        <Flex justifyContent="space-between" m={4} alignItems="center">
+        <Flex m={4} mx={{ base: 0, md: 4 }} justifyContent="space-between" alignItems="center">
           <Flex>
             <Tooltip label={t('table.first_page')}>
               <IconButton
@@ -350,7 +350,7 @@ const _DataTable = <TValue extends object>({
                 onClick={() => handleGoToPage(0)}
                 isDisabled={!canPreviousPage}
                 icon={<ArrowLeftIcon h={3} w={3} />}
-                mr={4}
+                mr={{base:1, md:4}}
               />
             </Tooltip>
             <Tooltip label={t('table.previous_page')}>
@@ -427,7 +427,7 @@ const _DataTable = <TValue extends object>({
                 onClick={() => handleGoToPage(pageCount - 1)}
                 isDisabled={!canNextPage}
                 icon={<ArrowRightIcon h={3} w={3} />}
-                ml={4}
+                ml={{base:1, md:4}}
               />
             </Tooltip>
           </Flex>

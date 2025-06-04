@@ -63,37 +63,34 @@ const LogsCard = () => {
   }, [logs, show, serialNumber]);
 
   type RowProps = { index: number; style: React.CSSProperties };
-  const Row = React.useCallback(
-    ({ index, style }: RowProps) => {
-      const msg = data[index];
-      if (msg) {
-        if (msg.type === 'NOTIFICATION' && msg.data.serialNumber) {
-          return (
-            <Box style={style}>
-              <Flex w="100%">
-                <Box flex="0 1 110px">
-                  <Text>{msg.timestamp.toLocaleTimeString()}</Text>
-                </Box>
-                <Box flex="0 1 130px" textAlign="left">
-                  <Text fontFamily="mono">{msg.data?.serialNumber ?? '-'}</Text>
-                </Box>
-                <Box flex="0 1 140px">
-                  <Text>{labels[msg.data.type] ?? msg.data.type}</Text>
-                </Box>
-                <Box textAlign="left" w="calc(100% - 80px - 120px - 140px - 60px)">
-                  <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
-                    {JSON.stringify(msg.data)}
-                  </Text>
-                </Box>
-              </Flex>
-            </Box>
-          );
-        }
-      }
-      return null;
-    },
-    [t, data],
-  );
+  const Row = ({ index, style }: RowProps) => {
+    const msg = data[index];
+    if (!msg || msg.type !== 'NOTIFICATION' || !msg.data.serialNumber) return null;
+  
+    return (
+      <Box style={style}>
+        <Flex w="min-content" minW="600px"> {/* Ensure consistent column width & scroll */}
+          <Box w="110px">
+            <Text fontSize="sm">{msg.timestamp.toLocaleTimeString()}</Text>
+          </Box>
+          <Box w="150px">
+            <Text fontSize="sm" fontFamily="mono">{msg.data.serialNumber}</Text>
+          </Box>
+          <Box w="120px">
+            <Text fontSize="sm">{labels[msg.data.type] ?? msg.data.type}</Text>
+          </Box>
+          <Box flex="1">
+            <Text fontSize="sm" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+              {JSON.stringify(msg.data)}
+            </Text>
+          </Box>
+        </Flex>
+      </Box>
+    );
+  };
+  
+  
+  
 
   const downloadableLogs = React.useMemo(
     () =>
@@ -108,16 +105,16 @@ const LogsCard = () => {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader py={2}>
         <DeviceLogsSearchBar onSearchSelect={onSerialSelect} />
-        <Spacer />
-        <HStack spacing={2}>
+        {/* <Spacer /> */}
+        <HStack spacing={2} flexWrap={'wrap'} gap={2} ml={{ base: 0, md: 'auto' }}>
           <ShownLogsDropdown
             availableLogTypes={availableLogTypes}
             setHiddenLogIds={setHiddenLogIds}
             hiddenLogIds={hiddenLogIds}
           />
-          <Select size="md" value={show} onChange={(e) => setShow(e.target.value as '' | 'connections')} w="200px">
+          <Select value={show} onChange={(e) => setShow(e.target.value as '' | 'connections')} w="200px" ml={0}>
             <option value="">{t('common.select_all')}</option>
             <option value="connections">{t('controller.devices.connection_changes')}</option>
             <option value="statistics">{t('logs.device_statistics')}</option>
@@ -135,27 +132,31 @@ const LogsCard = () => {
         </HStack>
       </CardHeader>
       <CardBody>
-        <Box overflowX="auto" w="100%">
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th w="110px">{t('common.time')}</Th>
-                <Th w="150px">{t('inventory.serial_number')}</Th>
-                <Th w="120px" pl={0}>
-                  {t('common.type')}
-                </Th>
-                <Th>{t('analytics.raw_data')}</Th>
-              </Tr>
-            </Thead>
-          </Table>
-          <Box ml={4} h="calc(70vh)">
-            <ReactVirtualizedAutoSizer>
-              {({ height, width }) => (
-                <List height={height} width={width} itemCount={data.length} itemSize={35}>
-                  {Row}
-                </List>
-              )}
-            </ReactVirtualizedAutoSizer>
+        <Box w="100%" overflowX="auto">
+          <Box minW="600px">
+            {' '}
+            {/* set a minimum width for the table */}
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th w="110px">{t('common.time')}</Th>
+                  <Th w="150px">{t('inventory.serial_number')}</Th>
+                  <Th w="120px" pl={0}>
+                    {t('common.type')}
+                  </Th>
+                  <Th>{t('analytics.raw_data')}</Th>
+                </Tr>
+              </Thead>
+            </Table>
+            <Box ml={4} h="calc(70vh)">
+              <ReactVirtualizedAutoSizer>
+                {({ height, width }) => (
+                  <List height={height} width={width} itemCount={data.length} itemSize={35}>
+                    {Row}
+                  </List>
+                )}
+              </ReactVirtualizedAutoSizer>
+            </Box>
           </Box>
         </Box>
       </CardBody>

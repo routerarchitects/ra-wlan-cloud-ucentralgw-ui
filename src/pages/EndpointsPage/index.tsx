@@ -46,7 +46,7 @@ const EndpointsPage = ({ isOnlySec }: EndpointsPageProps) => {
           <RefreshButton onClick={refetch} isFetching={isFetching} />
         </CardHeader>
       </Card>
-      <SimpleGrid minChildWidth="500px" spacing="20px">
+      <SimpleGrid minChildWidth={{ base: '100%', md: '500px' }} spacing="20px">
         {endpointsList}
       </SimpleGrid>
     </>

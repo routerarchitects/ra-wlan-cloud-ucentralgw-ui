@@ -69,14 +69,16 @@ const EditScriptForm = ({ script, formRef, isEditing, onSubmit }: Props) => {
     >
       {(props: { setFieldValue: (k: string, v: unknown) => void; values: Script }) => (
         <Box w="100%">
-          <Flex>
+          <Flex direction={{ base: 'column', md: 'row' }} flexWrap="wrap">
             <Box w="240px" mr={2}>
               <StringField name="name" label={t('common.name')} isRequired isDisabled={isDisabled} />
             </Box>
-            <StringField name="description" label={t('common.description')} isDisabled={isDisabled} />
+            <Box w="100%" maxW="560px" display="flex" flexDir={{ base: 'column', md: 'row' }}>
+              <StringField name="description" label={t('common.description')} isDisabled={isDisabled} />
+            </Box>
           </Flex>
-          <Flex mt={2}>
-            <Box w="120px">
+          <Flex mt={2} direction={{ base: 'column', md: 'row' }} flexWrap="wrap" gap={2}>
+            <Box w={{ base: '100%', md: '120px' }}>
               <SelectField
                 name="type"
                 label={t('common.type')}
@@ -86,18 +88,18 @@ const EditScriptForm = ({ script, formRef, isEditing, onSubmit }: Props) => {
                 ]}
                 isRequired
                 isDisabled
-                w="120px"
+                w="100%" // full width within parent box
               />
             </Box>
-            <Box mx={2}>
-              <StringField name="version" label={t('footer.version')} isRequired isDisabled={isDisabled} w="160px" />
+            <Box mx={{ base: 0, md: 2 }} w={{ base: '100%', md: '160px' }}>
+              <StringField name="version" label={t('footer.version')} isRequired isDisabled={isDisabled} w="100%" />
             </Box>
-            <Box w="100%" maxW="240px" mr={2}>
-              <StringField name="author" label={t('script.author')} isRequired isDisabled />
+            <Box w={{ base: '100%', md: '100%' }} maxW="240px" mr={{ base: 0, md: 2 }}>
+              <StringField name="author" label={t('script.author')} isRequired isDisabled w="100%" />
             </Box>
-            <Box maxW="460px" display="flex">
-              <StringField name="uri" label={t('script.helper')} isDisabled={isDisabled} />
-              <Box ml={2} mt="auto">
+            <Box w="100%" maxW="460px" display="flex" flexDir={{ base: 'column', md: 'row' }}>
+              <StringField name="uri" label={t('script.helper')} isDisabled={isDisabled} w="100%" />
+              <Box ml={{ base: 0, md: 2 }} mt={{ base: 2, md: 'auto' }}>
                 <Tooltip label={t('script.visit_external_website')}>
                   <IconButton
                     aria-label="Go to helper"

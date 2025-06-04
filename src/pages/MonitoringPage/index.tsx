@@ -46,7 +46,7 @@ const MonitoringPage = ({ isOnlySec }: MonitoringPageProps) => {
           <RefreshButton onClick={refetch} isFetching={isFetching} />
         </CardHeader>
       </Card>
-      <SimpleGrid minChildWidth="1000px" spacing="20px">
+      <SimpleGrid minChildWidth={{ base: '100%', sm: '1000px' }} spacing="20px">
         {endpointsList}
       </SimpleGrid>
     </>

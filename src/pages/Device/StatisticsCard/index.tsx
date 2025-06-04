@@ -88,10 +88,10 @@ const DeviceStatisticsCard = ({ serialNumber }: Props) => {
         headerStyle={{
           color: 'green',
         }}
+        py={{base: 2, md: 0}}
       >
         <Heading size="md">{t('configurations.statistics')}</Heading>
-        <Spacer />
-        <HStack>
+        <HStack ml={'auto'} wrap={{base: 'wrap', md: 'nowrap'}} gap={{base: 2, md: 0}}>
           {selected === 'memory' ? null : (
             <Select value={formatChosen} onChange={onFormatChange} w="112px">
               <option value="bytes">Data</option>

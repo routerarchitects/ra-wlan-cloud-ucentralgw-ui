@@ -32,7 +32,7 @@ const chakraStyles: (
   }),
   container: (provided) => ({
     ...provided,
-    width: '320px',
+    width: '100%',
     backgroundColor: colorMode === 'light' ? 'white' : 'gray.600',
     borderRadius: '15px',
   }),
@@ -171,7 +171,7 @@ const GlobalSearchBar = () => {
       label={`Search serial numbers and radius clients. For radius clients you can either use the client's username (rad:client@client.com)
        or use the client's station ID (rad:11:22:33:44:55:66)`}
       shouldWrapChildren
-      placement="left"
+      placement="top"
     >
       <AsyncSelect<SearchOption, false, GroupBase<SearchOption>>
         name="global_search"

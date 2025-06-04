@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Heading, HStack, Spacer } from '@chakra-ui/react';
+import { Box, Heading, HStack, Spacer } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import CreateApiKeyButton from './AddButton';
 import useApiKeyTable from './useApiKeyTable';
@@ -37,17 +37,19 @@ const ApiKeyTable = ({ userId }: Props) => {
         </HStack>
       </CardHeader>
       <CardBody>
-        <DataTable
-          columns={columns as Column<object>[]}
-          saveSettingsId="apiKeys.profile.table"
-          data={query.data?.apiKeys ?? []}
-          obj={t('keys.other')}
-          sortBy={[{ id: 'expiresOn', desc: false }]}
-          minHeight="400px"
-          hiddenColumns={hiddenColumns[0]}
-          showAllRows
-          hideControls
-        />
+        <Box overflowX="auto">
+          <DataTable
+            columns={columns as Column<object>[]}
+            saveSettingsId="apiKeys.profile.table"
+            data={query.data?.apiKeys ?? []}
+            obj={t('keys.other')}
+            sortBy={[{ id: 'expiresOn', desc: false }]}
+            minHeight="400px"
+            hiddenColumns={hiddenColumns[0]}
+            showAllRows
+            hideControls
+          />
+        </Box>
       </CardBody>
     </>
   );

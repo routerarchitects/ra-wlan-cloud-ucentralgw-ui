@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Heading, Spacer, useDisclosure } from '@chakra-ui/react';
+import { Box, Heading, Spacer, useDisclosure, Flex, HStack } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import Actions from './Actions';
 import CreateDefaultConfigurationModal from './CreateModal';
@@ -97,12 +97,23 @@ const DefaultConfigurationsList = () => {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">
-          {t('controller.configurations.title')} {getConfigs.data ? `(${getConfigs.data.length})` : ''}
-        </Heading>
-        <Spacer />
-        <CreateDefaultConfigurationModal />
-        <RefreshButton onClick={getConfigs.refetch} isCompact isFetching={getConfigs.isFetching} />
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          justify="space-between"
+          align={{ base: 'flex-start', md: 'center' }}
+          w="100%"
+          gap={2}
+          py={{base: 2, md: 0}}
+        >
+          <Heading size="md">
+            {t('controller.configurations.title')} {getConfigs.data ? `(${getConfigs.data.length})` : ''}
+          </Heading>
+
+          <HStack>
+            <CreateDefaultConfigurationModal />
+            <RefreshButton onClick={getConfigs.refetch} isCompact isFetching={getConfigs.isFetching} />
+          </HStack>
+        </Flex>
       </CardHeader>
       <CardBody>
         <Box overflowX="auto" w="100%">

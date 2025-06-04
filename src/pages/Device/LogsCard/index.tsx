@@ -27,7 +27,7 @@ const DeviceLogsCard = ({ serialNumber }: Props) => {
     <Card p={0} mb={4}>
       <CardBody p={0}>
         <Tabs index={tabIndex} onChange={handleTabsChange} variant="enclosed" w="100%">
-          <TabList>
+          <TabList flexWrap={'wrap'}>
             <Tab fontSize="lg" fontWeight="bold">
               {t('controller.devices.commands')}
             </Tab>

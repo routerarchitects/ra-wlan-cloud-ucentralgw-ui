@@ -132,8 +132,8 @@ const FirmwareListTable = () => {
         <Heading size="md" my="auto" mr={2}>
           {t('analytics.firmware')} {getFirmware.data ? `(${getFirmware.data.length})` : ''}
         </Heading>
-        <Spacer />
-        <HStack>
+        {/* <Spacer /> */}
+        <HStack ml={{base: 'auto'}} flexWrap="wrap" gap={2}>
           <Box>
             <Select value={deviceType} onChange={(e) => setDeviceType(e.target.value)}>
               {getDeviceTypes.data?.deviceTypes.map((devType) => (
@@ -157,7 +157,7 @@ const FirmwareListTable = () => {
         </HStack>
       </CardHeader>
       <CardBody>
-        <Box overflowX="auto" w="100%">
+        <Box w="100%">
           <LoadingOverlay isLoading={getDeviceTypes.isFetching || getFirmware.isFetching}>
             <DataTable<Firmware>
               columns={columns}

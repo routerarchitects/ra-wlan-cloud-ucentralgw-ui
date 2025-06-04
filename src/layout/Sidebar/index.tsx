@@ -68,7 +68,7 @@ export const Sidebar = ({ routes, isOpen, toggle, logo, version, topNav, childre
               .filter(({ hidden, authorized }) => !hidden && authorized.includes(user?.userRole ?? ''))
               .map((route) =>
                 route.children ? (
-                  <NestedNavButton key={route.id} isActive={isRouteActive} route={route} />
+                  <NestedNavButton key={route.id} isActive={isRouteActive} route={route} toggleSidebar={toggle} />
                 ) : (
                   <NavLinkButton
                     key={route.id}

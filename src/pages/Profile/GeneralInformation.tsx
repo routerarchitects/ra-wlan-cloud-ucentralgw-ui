@@ -170,9 +170,9 @@ const GeneralInformationProfile = () => {
           >
             {({ isSubmitting }) => (
               <Form>
-                <Flex>
+                <Flex flexDirection={{ base: 'column', md: 'row' }}>
                   <StringField name="email" label={t('common.email')} isDisabled />
-                  <Box w={8} />
+                  <Box w={{ base: 0, md: 8 }} h={{ base: 4, md: 'auto' }} />
                   <SelectField
                     name="userRole"
                     label={t('user.role')}
@@ -190,7 +190,7 @@ const GeneralInformationProfile = () => {
                     w="max-content"
                   />
                 </Flex>
-                <Flex my={4}>
+                <Flex my={4} flexDirection={{ base: 'column', md: 'row' }}>
                   <StringField
                     name="firstName"
                     label={t('contacts.first_name')}
@@ -212,7 +212,7 @@ const GeneralInformationProfile = () => {
                   isDisabled={isSubmitting || !isEditing}
                   isArea
                 />
-                <Flex my={4}>
+                <Flex my={4} flexDirection={{ base: 'column', md: 'row' }}>
                   <StringField
                     name="newPassword"
                     label={t('profile.new_password')}

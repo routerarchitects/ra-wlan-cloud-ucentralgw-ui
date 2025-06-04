@@ -136,7 +136,7 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
         </Alert>
         <FormControl isInvalid={!isValid && newConfig.length > 0}>
           <FormLabel>{t('configurations.one')}</FormLabel>
-          <Flex mb={2}>
+          <Flex mb={2} wrap={'wrap'} gap={2}>
             <Box w="240px">
               <FileInputButton
                 value={newConfig}
@@ -150,7 +150,7 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
               rightIcon={<ClipboardText size={20} />}
               onClick={onImportConfiguration}
               hidden={!getDevice.data}
-              ml={2}
+              ml={{base: 0, md: 2}}
             >
               Current Configuration
             </Button>

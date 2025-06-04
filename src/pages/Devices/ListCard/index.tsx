@@ -734,7 +734,6 @@ const DeviceListCard = () => {
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value as DevicePlatform)}
                 w="max-content"
-                ml={2}
               >
                 <option value="ALL">All</option>
                 <option value="ap">APs</option>

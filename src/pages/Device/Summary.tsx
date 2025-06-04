@@ -30,10 +30,11 @@ import { useGetDeviceLastStats } from 'hooks/Network/Statistics';
 const ICON_STYLE = { width: '24px', height: '24px', marginRight: '8px' };
 
 type Props = {
+  isCompact: boolean;
   serialNumber: string;
 };
 
-const DeviceSummary = ({ serialNumber }: Props) => {
+const DeviceSummary = ({ isCompact, serialNumber }: Props) => {
   const { t } = useTranslation();
   const { colorMode } = useColorMode();
   const getDevice = useGetDevice({ serialNumber });
@@ -81,12 +82,17 @@ const DeviceSummary = ({ serialNumber }: Props) => {
         <Heading size="md">{t('common.status')}</Heading>
       </CardHeader>
       <CardBody>
-        <Flex w="100%" alignItems="center">
+        <Flex 
+          w="100%" 
+          alignItems="center" 
+          justifyContent={{ base: 'center', md: 'flex-start' }}  
+          flexWrap={{base: 'wrap', md: 'nowrap'}}
+        >
           <Image
             src={`devices/${getDeviceCompatible()}.png`}
             alt={getDevice?.data?.compatible}
             fallback={
-              <Box minW="220px" w="220px" h="220px" mr={4} display="flex">
+              <Box minW="220px" w="220px" h="220px" mr={{ base: 0, md: 4 }}  display="flex" justifyContent="center">
                 <Image
                   src="devices/generic_ap.png"
                   alt={getDevice?.data?.compatible}
@@ -103,8 +109,8 @@ const DeviceSummary = ({ serialNumber }: Props) => {
                 </Center>
               </Box>
             }
-            boxSize="220px"
-            mr={4}
+            boxSize={{ base: '180px', md: '220px' }}
+            mr={{ base: 0, md: 4 }}
           />
           <Grid templateColumns="repeat(2, 1fr)" gap={0} w="100%">
             <GridItem colSpan={1} alignContent="center" alignItems="center">

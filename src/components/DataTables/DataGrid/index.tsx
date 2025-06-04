@@ -42,6 +42,7 @@ export type DataGridOptions<TValue extends object> = {
   showAsCard?: boolean;
   hideTablePreferences?: boolean;
   hideTableTitleRow?: boolean;
+  mL?: string;
 };
 
 export type DataGridProps<TValue extends object> = {
@@ -70,7 +71,6 @@ export const DataGrid = <TValue extends object>({
   isLoading = false,
 }: DataGridProps<TValue>) => {
   const { t } = useTranslation();
-
   /*
     Table Styling
   */
@@ -186,8 +186,8 @@ export const DataGrid = <TValue extends object>({
           header.title
         )}
         {header.leftContent}
-        <Spacer />
-        <HStack spacing={2}>
+        {/* <Spacer /> */}
+        <HStack spacing={2} ml={{ base: options?.mL || 0, md: 'auto' }}>
           {header.otherButtons}
           {header.addButton}
           {options.hideTablePreferences ? null : (
