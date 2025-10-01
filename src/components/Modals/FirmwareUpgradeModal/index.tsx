@@ -42,6 +42,7 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
     | undefined
   >();
   const [isRedirector, { toggle }] = useBoolean(false);
+  const [useLocalCertificate, { toggle: toggleLocalCert }] = useBoolean(false);
   const { data: device, isFetching: isFetchingDevice } = useGetDevice({ serialNumber, onClose });
   const { data: firmware, isFetching: isFetchingFirmware } = useGetAvailableFirmware({
     deviceType: device?.compatible ?? '',
@@ -55,9 +56,10 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
     onModalClose: onClose,
   });
 
-  const submit = (uri: string) => {
+  const submit = (uri: string) => {useLocalCertificate
     upgrade({
       keepRedirector: isRedirector,
+      useLocalCertificate,
       uri,
       signature:
         device?.restrictedDevice && !device?.restrictionDetails?.developer ? ref.current?.values?.signature : undefined,
@@ -98,6 +100,14 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
                 </FormLabel>
                 <Switch isChecked={isRedirector} onChange={toggle} borderRadius="15px" size="lg" />
               </FormControl>
+              {/* Render a form control for "Use Local Certificate" option in Firmware Upgrade modal */}
+              <FormControl mt={3}>
+                <FormLabel ms="4px" fontSize="md" fontWeight="normal">
+                  {t('commands.use_local_certificate')}
+                </FormLabel>
+                <Switch isChecked={useLocalCertificate} onChange={toggleLocalCert} borderRadius="15px" size="lg" />
+              </FormControl>
+
               {device?.restrictedDevice && !device?.restrictionDetails?.developer && (
                 <Formik<{ signature?: string }>
                   innerRef={ref as Ref<FormikProps<{ signature?: string | undefined }>> | undefined}
