@@ -739,6 +739,7 @@ const DeviceListCard = () => {
                 <option value="ALL">All</option>
                 <option value="ap">APs</option>
                 <option value="switch">Switches</option>
+                <option value="olg">OLG</option>
               </Select>
             </>
           ),

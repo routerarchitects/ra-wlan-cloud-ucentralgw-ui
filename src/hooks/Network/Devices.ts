@@ -11,7 +11,7 @@ import { Note } from 'models/Note';
 import { PageInfo } from 'models/Table';
 import { DeviceCommandHistory } from './Commands';
 
-export const DEVICE_PLATFORMS = ['all', 'ap', 'switch'] as const;
+export const DEVICE_PLATFORMS = ['all', 'ap', 'switch', 'olg'] as const;
 export type DevicePlatform = (typeof DEVICE_PLATFORMS)[number];
 
 const getDeviceCount = (platform: DevicePlatform) =>
@@ -55,7 +55,7 @@ export type DeviceWithStatus = {
   certificateExpiryDate?: number;
   createdTimestamp: number;
   devicePassword: string;
-  deviceType: 'ap' | 'switch';
+  deviceType: 'ap' | 'switch' | 'olg';
   entity: string;
   firmware: string;
   fwUpdatePolicy: string;
