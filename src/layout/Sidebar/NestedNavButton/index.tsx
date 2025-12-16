@@ -19,9 +19,10 @@ const variantChange = '0.2s linear';
 type Props = {
   isActive: (path: string) => boolean;
   route: RouteGroup;
+  toggleSidebar: () => void;
 };
 
-const NestedNavButton = ({ isActive, route }: Props) => {
+const NestedNavButton = ({ isActive, route, toggleSidebar }: Props) => {
   const { t } = useTranslation();
   const inactiveTextColor = useColorModeValue('gray.600', 'gray.200');
   const hoverBg = useColorModeValue('blue.100', 'blue.800');
@@ -53,7 +54,7 @@ const NestedNavButton = ({ isActive, route }: Props) => {
       <AccordionPanel pl="18px" paddingEnd={0} pr="-18px">
         <Box pl={1} pr={-1} borderLeft="1px solid #63b3ed">
           {route.children.map((subRoute) => (
-            <SubNavigationButton key={subRoute.path} route={subRoute} isActive={isActive} />
+            <SubNavigationButton key={subRoute.path} route={subRoute} isActive={isActive} toggleSidebar={toggleSidebar} />
           ))}
         </Box>
       </AccordionPanel>

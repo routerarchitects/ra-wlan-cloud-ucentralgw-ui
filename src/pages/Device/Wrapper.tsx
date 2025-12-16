@@ -191,7 +191,7 @@ const DevicePageWrapper = ({ serialNumber }: Props) => {
     <>
       {isCompact ? (
         <Card mb={4}>
-          <CardHeader variant="unstyled" p="8px">
+          <CardHeader py={{base: 2, md: 0}}>
             <HStack spacing={2}>
               {getDevice.data?.simulated ? (
                 <ResponsiveTag label={t('simulation.simulated')} colorScheme="purple" icon={Circuitry} />
@@ -201,8 +201,8 @@ const DevicePageWrapper = ({ serialNumber }: Props) => {
               {restrictedTag}
               <GlobalSearchBar />
             </HStack>
-            <Spacer />
-            <HStack spacing={2}>
+            {/* <Spacer /> */}
+            <HStack spacing={2} ml={{base: '0', md: 'auto'}}>
               <DeleteButton isCompact onClick={onDeleteOpen} />
               {getDevice?.data && (
                 <DeviceActionDropdown
@@ -327,7 +327,7 @@ const DevicePageWrapper = ({ serialNumber }: Props) => {
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >
-          <DeviceSummary serialNumber={serialNumber} />
+          <DeviceSummary isCompact={isCompact} serialNumber={serialNumber} />
           <DeviceDetails serialNumber={serialNumber} />
           <DeviceStatisticsCard serialNumber={serialNumber} />
           {getDevice.data?.deviceType === 'ap' ? <WifiAnalysisCard serialNumber={serialNumber} /> : null}

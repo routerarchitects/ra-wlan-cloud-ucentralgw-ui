@@ -126,6 +126,7 @@ const DeviceListCard = () => {
           onRowClick: (dev) => goToSerial(dev.serialNumber),
           refetch: getDevices.refetch,
           showAsCard: true,
+          mL: 'auto'
         }}
       />
       <EditBlacklistModal device={device} modalProps={editModalProps} />

@@ -65,7 +65,14 @@ const FmsLogsCard = () => {
         if (msg.type === 'NOTIFICATION' && msg.data.type === 'LOG') {
           return (
             <Box style={style}>
-              <Flex w="100%">
+              <Flex
+                w="100%"
+                minW="1500px" // Match this with the <Box minW="800px"> used above
+                wrap="nowrap"
+                overflow="hidden"
+                whiteSpace="nowrap"
+                fontSize="sm"
+              >
                 <Box flex="0 1 110px">
                   <Text>{msg.timestamp.toLocaleTimeString()}</Text>
                 </Box>
@@ -124,8 +131,8 @@ const FmsLogsCard = () => {
   return (
     <Card>
       <CardHeader>
-        <Spacer />
-        <HStack spacing={2}>
+        {/* <Spacer /> */}
+        <HStack spacing={2} flexWrap={'wrap'} gap={2} ml={{ base: 0, md: 'auto' }}>
           <ShownLogsDropdown
             availableLogTypes={availableLogTypes}
             setHiddenLogIds={setHiddenLogIds}
@@ -150,36 +157,38 @@ const FmsLogsCard = () => {
         </HStack>
       </CardHeader>
       <CardBody>
-        <Box overflowX="auto" w="100%">
+      <Box overflowX="auto" w="100%">
+          <Box minW="1500px">
           <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th w="110px">{t('common.time')}</Th>
-                <Th w="200px">{t('logs.source')}</Th>
-                <Th w="160px">
-                  {t('logs.thread')} ID-{t('common.name')}
-                </Th>
-                <Th w="90px" pl={0}>
-                  {t('logs.level')}
-                </Th>
-                <Th>{t('logs.message')}</Th>
-              </Tr>
-            </Thead>
-          </Table>
-          <Box ml={4} h="calc(70vh)">
-            <ReactVirtualizedAutoSizer>
-              {({ height, width }) => (
-                <List
-                  height={height}
-                  width={width}
-                  itemCount={data.length}
-                  itemSize={35}
-                  itemKey={(index) => data[index]?.id ?? uuid()}
-                >
-                  {Row}
-                </List>
-              )}
-            </ReactVirtualizedAutoSizer>
+              <Thead>
+                <Tr>
+                  <Th w="110px">{t('common.time')}</Th>
+                  <Th w="200px">{t('logs.source')}</Th>
+                  <Th w="160px">
+                    {t('logs.thread')} ID-{t('common.name')}
+                  </Th>
+                  <Th w="90px" pl={0}>
+                    {t('logs.level')}
+                  </Th>
+                  <Th>{t('logs.message')}</Th>
+                </Tr>
+              </Thead>
+            </Table>
+            <Box ml={4} h="calc(70vh)">
+              <ReactVirtualizedAutoSizer>
+                {({ height, width }) => (
+                  <List
+                    height={height}
+                    width={width}
+                    itemCount={data.length}
+                    itemSize={35}
+                    itemKey={(index) => data[index]?.id ?? uuid()}
+                  >
+                    {Row}
+                  </List>
+                )}
+              </ReactVirtualizedAutoSizer>
+            </Box>
           </Box>
         </Box>
       </CardBody>

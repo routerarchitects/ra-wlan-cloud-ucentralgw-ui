@@ -10,6 +10,7 @@ import {
   Tooltip,
   useDisclosure,
   VStack,
+  Text,
 } from '@chakra-ui/react';
 import { ArrowsClockwise } from '@phosphor-icons/react';
 import { MultiValue, Select } from 'chakra-react-select';
@@ -71,13 +72,20 @@ const SystemTile = ({ endpoint, token }: Props) => {
           <RefreshButton onClick={refresh} isFetching={isFetchingSystem || isFetchingSubsystems} />
         </CardHeader>
         <CardBody>
-          <VStack w="100%">
-            <SimpleGrid minChildWidth="500px" w="100%">
-              <Flex>
-                <Heading size="sm" w="150px" my="auto">
+          <VStack w="100%" align="stretch" spacing={4}>
+            <Box minChildWidth="500px">
+              <Flex w="100%" align="center">
+                <Heading size="sm" w="150px">
                   {t('system.endpoint')}:
                 </Heading>
-                {endpoint.uri}
+                <Text
+                  flex="1"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                >
+                  {endpoint.uri}
+                </Text>
               </Flex>
               <Flex>
                 <Heading size="sm" w="150px" my="auto">
@@ -127,7 +135,7 @@ const SystemTile = ({ endpoint, token }: Props) => {
                   t('common.unknown')
                 )}
               </Flex>
-            </SimpleGrid>
+            </Box>
             <Flex w="100%">
               <Heading size="sm" w="150px" my="auto">
                 {t('system.subsystems')}:

@@ -38,9 +38,17 @@ const ScriptResultDisplay = ({ result }: Props) => {
           onClick={onDownload}
           colorScheme="blue"
           isLoading={download.isFetching}
-          isDisabled={result.waitingForFile !== 0}
+          // isDisabled={result.waitingForFile !== 0}
+          whiteSpace={{ base: 'normal', md: 'nowrap' }}
+          textAlign="center"
+          height="auto"
+          lineHeight="1.2"
+          px={4}
+          py={2}
+          maxW={{ base: '90%', md: 'none' }}
         >
-          {result.waitingForFile === 0 ? t('common.download') : t('script.file_not_ready')}
+          {/* {result.waitingForFile === 0 ? t('common.download') : t('script.file_not_ready')} */}
+          {t('common.download')}
         </Button>
       </Center>
     );

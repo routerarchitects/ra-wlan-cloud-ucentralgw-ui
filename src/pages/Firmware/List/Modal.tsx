@@ -145,7 +145,7 @@ const FirmwareDetailsModal = ({ modalProps, firmware }: Props) => {
 
   return (
     <Modal isOpen={modalProps.isOpen} onClose={modalProps.onClose} title={getRevision(firmware?.revision)}>
-      <SimpleGrid minChildWidth="400px" spacing={4}>
+      <SimpleGrid minChildWidth="330px" spacing={4}>
         <FormControl>
           <FormLabel>{t('commands.revision')}</FormLabel>
           <Heading size="sm">{getRevision(firmware?.revision)}</Heading>

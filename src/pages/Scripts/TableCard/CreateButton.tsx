@@ -166,8 +166,13 @@ const CreateScriptButton = ({ onIdSelect }: Props) => {
                 <Box mt={2}>
                   <ScriptUploadField name="defaultUploadURI" isDisabled={isDisabled} />
                 </Box>
-                <Flex mt={2}>
-                  <Box w="120px">
+                <Flex
+                  mt={2}
+                  flexDirection={{ base: 'column', md: 'row' }} // Stack on mobile, horizontal on md+
+                  gap={2} // adds spacing between fields
+                  flexWrap="wrap"
+                >
+                  <Box w={{ base: '100%', md: '120px' }}>
                     <SelectField
                       name="type"
                       label={t('common.type')}
@@ -177,19 +182,21 @@ const CreateScriptButton = ({ onIdSelect }: Props) => {
                       ]}
                       isRequired
                       isDisabled={isDisabled}
-                      w="120px"
+                      w="100%"
                     />
                   </Box>
-                  <Box mx={2}>
+                  <Box w={{ base: '100%', md: '160px' }}>
                     <StringField
                       name="version"
                       label={t('footer.version')}
                       isRequired
                       isDisabled={isDisabled}
-                      w="160px"
+                      w="100%"
                     />
                   </Box>
-                  <StringField name="author" label={t('script.author')} isRequired isDisabled={isDisabled} />
+                  <Box w={{ base: '100%', md: 'auto' }}>
+                    <StringField name="author" label={t('script.author')} isRequired isDisabled={isDisabled} w="100%" />
+                  </Box>
                 </Flex>
                 <Box mt={2}>
                   <ScriptFileInput isDisabled={isDisabled} />

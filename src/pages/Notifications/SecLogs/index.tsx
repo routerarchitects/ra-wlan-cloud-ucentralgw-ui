@@ -65,21 +65,28 @@ const SecLogsCard = () => {
         if (msg.type === 'NOTIFICATION' && msg.data.type === 'LOG') {
           return (
             <Box style={style}>
-              <Flex w="100%">
-                <Box flex="0 1 110px">
+              <Flex
+                w="100%"
+                minW="1272px" // Match this with the <Box minW="800px"> used above
+                wrap="nowrap"
+                overflow="hidden"
+                whiteSpace="nowrap"
+                fontSize="sm"
+              >
+                <Box w="110px">
                   <Text>{msg.timestamp.toLocaleTimeString()}</Text>
                 </Box>
-                <Box flex="0 1 200px">
+                <Box w="200px">
                   <Text w="200px" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
                     {msg.data.log.source}
                   </Text>
                 </Box>
-                <Box flex="0 1 140px">
+                <Box w="140px">
                   <Text w="140px" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
                     {msg.data.log.thread_id}-{msg.data.log.thread_name}
                   </Text>
                 </Box>
-                <Box flex="0 1 110px">
+                <Box w="110px">
                   <Badge
                     ml={1}
                     size="lg"
@@ -90,10 +97,8 @@ const SecLogsCard = () => {
                     {msg.data.log.level}
                   </Badge>
                 </Box>
-                <Box textAlign="left" w="calc(100% - 180px - 210px - 120px - 60px)">
-                  <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
-                    {JSON.stringify(msg.data.log.msg).replace(/"/g, '')}
-                  </Text>
+                <Box flex="1" minW="200px">
+                  <Text noOfLines={1}>{JSON.stringify(msg.data.log.msg).replace(/"/g, '')}</Text>
                 </Box>
               </Flex>
             </Box>
@@ -124,62 +129,77 @@ const SecLogsCard = () => {
   return (
     <Card>
       <CardHeader>
-        <Spacer />
-        <HStack spacing={2}>
-          <ShownLogsDropdown
-            availableLogTypes={availableLogTypes}
-            setHiddenLogIds={setHiddenLogIds}
-            hiddenLogIds={hiddenLogIds}
-          />
-          <Select size="md" value={level} onChange={(e) => setLevel(e.target.value as '' | LogLevel)} w="130px">
-            <option value="">{t('common.select_all')}</option>
-            {Object.keys(colorSchemeMap).map((key) => (
-              <option key={uuid()} value={key}>
-                {uppercaseFirstLetter(key)}
-              </option>
-            ))}
-          </Select>
-          <CSVLink
-            filename={`logs_${dateForFilename(new Date().getTime() / 1000)}.csv`}
-            data={downloadableLogs as object[]}
-          >
-            <Tooltip label={t('logs.export')} hasArrow>
-              <IconButton aria-label={t('logs.export')} icon={<Download />} colorScheme="blue" />
-            </Tooltip>
-          </CSVLink>
-        </HStack>
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          alignItems={{ base: 'flex-start', md: 'center' }}
+          w="100%"
+          py={{ base: 2, md: 0 }}
+        >
+          {/* First line: ShownLogsDropdown always stays here */}
+          <Box ml={{ base: 0, md: 'auto' }} mb={{ base: 2, md: 0 }}>
+            <ShownLogsDropdown
+              availableLogTypes={availableLogTypes}
+              setHiddenLogIds={setHiddenLogIds}
+              hiddenLogIds={hiddenLogIds}
+              helperLabels={{
+                1: t('logs.one'),
+              }}
+            />
+          </Box>
+          {/* Second line on mobile (next to dropdown on desktop) */}
+          <HStack spacing={2} ml={{ base: 0, md: 2 }}>
+            <Select size="md" value={level} onChange={(e) => setLevel(e.target.value as '' | LogLevel)} w="130px">
+              <option value="">{t('common.select_all')}</option>
+              {Object.keys(colorSchemeMap).map((key) => (
+                <option key={uuid()} value={key}>
+                  {uppercaseFirstLetter(key)}
+                </option>
+              ))}
+            </Select>
+            <CSVLink
+              filename={`logs_${dateForFilename(new Date().getTime() / 1000)}.csv`}
+              data={downloadableLogs as object[]}
+            >
+              <Tooltip label={t('logs.export')} hasArrow>
+                <IconButton aria-label={t('logs.export')} icon={<Download />} colorScheme="blue" />
+              </Tooltip>
+            </CSVLink>
+          </HStack>
+        </Flex>
       </CardHeader>
       <CardBody>
         <Box overflowX="auto" w="100%">
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th w="110px">{t('common.time')}</Th>
-                <Th w="200px">{t('logs.source')}</Th>
-                <Th w="160px">
-                  {t('logs.thread')} ID-{t('common.name')}
-                </Th>
-                <Th w="90px" pl={0}>
-                  {t('logs.level')}
-                </Th>
-                <Th>{t('logs.message')}</Th>
-              </Tr>
-            </Thead>
-          </Table>
-          <Box ml={4} h="calc(70vh)">
-            <ReactVirtualizedAutoSizer>
-              {({ height, width }) => (
-                <List
-                  height={height}
-                  width={width}
-                  itemCount={data.length}
-                  itemSize={35}
-                  itemKey={(index) => data[index]?.id ?? uuid()}
-                >
-                  {Row}
-                </List>
-              )}
-            </ReactVirtualizedAutoSizer>
+          <Box minW="1272px">
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th w="110px">{t('common.time')}</Th>
+                  <Th w="200px">{t('logs.source')}</Th>
+                  <Th w="160px">
+                    {t('logs.thread')} ID-{t('common.name')}
+                  </Th>
+                  <Th w="90px" pl={0}>
+                    {t('logs.level')}
+                  </Th>
+                  <Th>{t('logs.message')}</Th>
+                </Tr>
+              </Thead>
+            </Table>
+            <Box ml={4} h="calc(70vh)">
+              <ReactVirtualizedAutoSizer>
+                {({ height, width }) => (
+                  <List
+                    height={height}
+                    width={width}
+                    itemCount={data.length}
+                    itemSize={35}
+                    itemKey={(index) => data[index]?.id ?? uuid()}
+                  >
+                    {Row}
+                  </List>
+                )}
+              </ReactVirtualizedAutoSizer>
+            </Box>
           </Box>
         </Box>
       </CardBody>

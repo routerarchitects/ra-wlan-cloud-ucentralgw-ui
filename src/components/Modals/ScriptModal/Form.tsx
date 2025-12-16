@@ -113,7 +113,7 @@ const CustomScriptForm = ({
               <FormLabel mb="12px">{t('controller.trace.wait')}</FormLabel>
               <Switch size="lg" isChecked={waitForResponse} onChange={onToggleWaitForResponse} />
             </FormControl>
-            <Box w="120px" mr={2} mb={4}>
+            {/* <Box w="120px" mr={2} mb={4}>
               <ToggleField
                 name="deferred"
                 label={t('script.deferred')}
@@ -126,7 +126,7 @@ const CustomScriptForm = ({
                 }}
                 isDisabled={areFieldsDisabled || isDiagnostics}
               />
-            </Box>
+            </Box> */}
             <Box>
               {!props.values.deferred && (
                 <NumberField

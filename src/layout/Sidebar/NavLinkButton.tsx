@@ -26,56 +26,35 @@ export const NavLinkButton = ({ isActive, route, toggleSidebar }: Props) => {
 
   return (
     <NavLink to={route.path.replace(':id', '0')} style={{ width: '100%' }}>
-      {isActive ? (
-        <AccordionItem w="152px" borderTop="0px" borderBottom="0px">
-          <AccordionButton
-            px={1}
-            h={{
-              md: '40px',
-              lg: '50px',
-            }}
-            borderRadius="15px"
-            w="100%"
-            bg={activeBg}
-            _hover={{
-              bg: hoverBg,
-            }}
-          >
-            <Flex alignItems="center" w="100%">
-              <IconBox color="blue.300" h="30px" w="30px" me="6px" transition={variantChange} fontWeight="bold">
-                {route.icon(false)}
-              </IconBox>
-              <Text color={activeTextColor} fontSize="md" fontWeight="bold">
-                {t(route.name)}
-              </Text>
-            </Flex>
-          </AccordionButton>
-        </AccordionItem>
-      ) : (
-        <AccordionItem w="152px" borderTop="0px" borderBottom="0px">
-          <AccordionButton
-            px={1}
-            h={{
-              md: '40px',
-              lg: '50px',
-            }}
-            borderRadius="15px"
-            w="100%"
-            _hover={{
-              bg: hoverBg,
-            }}
-          >
-            <Flex alignItems="center" w="100%">
-              <IconBox color="blue.300" h="30px" w="30px" me="6px" transition={variantChange} fontWeight="bold">
-                {route.icon(false)}
-              </IconBox>
-              <Text color={inactiveTextColor} fontSize="md" fontWeight="bold">
-                {t(route.name)}
-              </Text>
-            </Flex>
-          </AccordionButton>
-        </AccordionItem>
-      )}
+      <AccordionItem w="152px" borderTop="0px" borderBottom="0px">
+        <AccordionButton
+          onClick={toggleSidebar} // ✅ drawer will now close
+          px={1}
+          h={{
+            md: '40px',
+            lg: '50px',
+          }}
+          borderRadius="15px"
+          w="100%"
+          bg={isActive ? activeBg : undefined}
+          _hover={{
+            bg: hoverBg,
+          }}
+        >
+          <Flex alignItems="center" w="100%">
+            <IconBox color="blue.300" h="30px" w="30px" me="6px" transition={variantChange} fontWeight="bold">
+              {route.icon(false)}
+            </IconBox>
+            <Text
+              color={isActive ? activeTextColor : inactiveTextColor}
+              fontSize="md"
+              fontWeight="bold"
+            >
+              {t(route.name)}
+            </Text>
+          </Flex>
+        </AccordionButton>
+      </AccordionItem>
     </NavLink>
   );
 };

@@ -61,49 +61,45 @@ const GeneralLogsCard = () => {
   const Row = React.useCallback(
     ({ index, style }: RowProps) => {
       const msg = data[index];
-      if (msg) {
-        if (msg.type === 'NOTIFICATION' && msg.data.type === 'LOG') {
-          return (
-            <Box style={style}>
-              <Flex w="100%">
-                <Box flex="0 1 110px">
-                  <Text>{msg.timestamp.toLocaleTimeString()}</Text>
-                </Box>
-                <Box flex="0 1 200px">
-                  <Text w="200px" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
-                    {msg.data.log.source}
-                  </Text>
-                </Box>
-                <Box flex="0 1 140px">
-                  <Text w="140px" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
-                    {msg.data.log.thread_id}-{msg.data.log.thread_name}
-                  </Text>
-                </Box>
-                <Box flex="0 1 110px">
-                  <Badge
-                    ml={1}
-                    size="lg"
-                    fontSize="0.9em"
-                    variant="solid"
-                    colorScheme={colorSchemeMap[msg.data.log.level]}
-                  >
-                    {msg.data.log.level}
-                  </Badge>
-                </Box>
-                <Box textAlign="left" w="calc(100% - 180px - 210px - 120px - 60px)">
-                  <Text textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
-                    {JSON.stringify(msg.data.log.msg).replace(/"/g, '')}
-                  </Text>
-                </Box>
-              </Flex>
-            </Box>
-          );
-        }
+      if (msg?.type === 'NOTIFICATION' && msg.data?.type === 'LOG') {
+        return (
+          <Box style={style}>
+            <Flex
+              w="100%"
+              minW="1000px" // Match this with the <Box minW="800px"> used above
+              wrap="nowrap"
+              overflow="hidden"
+              whiteSpace="nowrap"
+              fontSize="sm"
+            >
+              <Box w="110px" flexShrink={0}>
+                <Text noOfLines={1}>{msg.timestamp.toLocaleTimeString()}</Text>
+              </Box>
+              <Box w="200px" flexShrink={0}>
+                <Text noOfLines={1}>{msg.data.log.source}</Text>
+              </Box>
+              <Box w="160px" flexShrink={0}>
+                <Text noOfLines={1}>
+                  {msg.data.log.thread_id}-{msg.data.log.thread_name}
+                </Text>
+              </Box>
+              <Box w="90px" flexShrink={0}>
+                <Badge ml={1} fontSize="0.75em" variant="solid" colorScheme={colorSchemeMap[msg.data.log.level]}>
+                  {msg.data.log.level}
+                </Badge>
+              </Box>
+              <Box flex="1" minW="200px">
+                <Text noOfLines={1}>{JSON.stringify(msg.data.log.msg).replace(/"/g, '')}</Text>
+              </Box>
+            </Flex>
+          </Box>
+        );
       }
       return null;
     },
     [t, data],
   );
+  
 
   const downloadableLogs = React.useMemo(
     () =>
@@ -124,14 +120,19 @@ const GeneralLogsCard = () => {
   return (
     <Card>
       <CardHeader>
-        <Spacer />
-        <HStack spacing={2}>
+        {/* <Spacer /> */}
+        <HStack spacing={2} flexWrap={'wrap'} gap={2} ml={{ base: 0, md: 'auto' }}>
           <ShownLogsDropdown
             availableLogTypes={availableLogTypes}
             setHiddenLogIds={setHiddenLogIds}
             hiddenLogIds={hiddenLogIds}
           />
-          <Select size="md" value={level} onChange={(e) => setLevel(e.target.value as '' | LogLevel)} w="130px">
+          <Select
+            size="md"
+            value={level}
+            onChange={(e) => setLevel(e.target.value as '' | LogLevel)}
+            w="130px"
+          >
             <option value="">{t('common.select_all')}</option>
             {Object.keys(colorSchemeMap).map((key) => (
               <option key={uuid()} value={key}>
@@ -151,35 +152,37 @@ const GeneralLogsCard = () => {
       </CardHeader>
       <CardBody>
         <Box overflowX="auto" w="100%">
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                <Th w="110px">{t('common.time')}</Th>
-                <Th w="200px">{t('logs.source')}</Th>
-                <Th w="160px">
-                  {t('logs.thread')} ID-{t('common.name')}
-                </Th>
-                <Th w="90px" pl={0}>
-                  {t('logs.level')}
-                </Th>
-                <Th>{t('logs.message')}</Th>
-              </Tr>
-            </Thead>
-          </Table>
-          <Box ml={4} h="calc(70vh)">
-            <ReactVirtualizedAutoSizer>
-              {({ height, width }) => (
-                <List
-                  height={height}
-                  width={width}
-                  itemCount={data.length}
-                  itemSize={35}
-                  itemKey={(index) => data[index]?.id ?? uuid()}
-                >
-                  {Row}
-                </List>
-              )}
-            </ReactVirtualizedAutoSizer>
+          <Box minW="1000px">
+            <Table size="sm">
+              <Thead>
+                <Tr>
+                  <Th w="110px">{t('common.time')}</Th>
+                  <Th w="200px">{t('logs.source')}</Th>
+                  <Th w="180px">
+                    {t('logs.thread')} ID-{t('common.name')}
+                  </Th>
+                  <Th w="90px" pl={0}>
+                    {t('logs.level')}
+                  </Th>
+                  <Th>{t('logs.message')}</Th>
+                </Tr>
+              </Thead>
+            </Table>
+            <Box ml={4} h="calc(70vh)">
+              <ReactVirtualizedAutoSizer>
+                {({ height, width }) => (
+                  <List
+                    height={height}
+                    width={width}
+                    itemCount={data.length}
+                    itemSize={35}
+                    itemKey={(index) => data[index]?.id ?? uuid()}
+                  >
+                    {Row}
+                  </List>
+                )}
+              </ReactVirtualizedAutoSizer>
+            </Box>
           </Box>
         </Box>
       </CardBody>

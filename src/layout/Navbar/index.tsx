@@ -114,83 +114,80 @@ export const Navbar = ({
         alignItems="center"
         borderRadius="15px"
         minH="75px"
-        justifyContent="center"
+        justifyContent="space-between"
         lineHeight="25.6px"
         pb="8px"
         right={{ base: '0px', sm: '0px', lg: '20px' }}
-        ps="12px"
+        ps={{ base: '25px', md: 0 }}
+        pe={{ base: '20px', md: 0 }}
         pt="8px"
         top="15px"
         border={scrolled ? '0.5px solid' : undefined}
         w={isCompact ? '100%' : 'calc(100% - 254px)'}
         zIndex={10}
       >
-        <Flex
-          w="100%"
-          flexDirection="row"
-          alignItems="center"
-          justifyItems="center"
-          alignContent="center"
-          justifyContent="center"
-        >
-          {isCompact && <HamburgerIcon w="24px" h="24px" onClick={toggleSidebar} mr={10} mt={1} />}
-          {activeRoute && activeRoute.length > 0 ? (
-            <Heading size="lg" mr={4}>
-              {activeRoute}
-            </Heading>
-          ) : null}
-          <Tooltip label={t('common.go_back')}>
-            <IconButton
-              mt={1}
-              colorScheme="blue"
-              aria-label={t('common.go_back')}
-              onClick={goBack}
-              size="sm"
-              icon={<ArrowCircleLeft width={20} height={20} />}
-            />
-          </Tooltip>
-          <Box ms="auto" w={{ base: 'unset' }}>
-            <Flex alignItems="center" flexDirection="row">
-              {rightElements}
-              {favoritesButton}
-              <Tooltip hasArrow label={t('common.theme')}>
+        <Flex w="100%" flexDirection="row" alignItems="center" justifyContent="space-between">
+          {/* LEFT SIDE: Hamburger + Title + Go Back */}
+          <Flex alignItems="center">
+            {isCompact && <HamburgerIcon w="24px" h="24px" onClick={toggleSidebar} mr={{ base: 5, md: 10 }} mt={1} />}
+            {activeRoute && activeRoute.length > 0 ? (
+              <Heading size={{ base: 'sm', md: 'lg' }} mr={{ base: 2, md: 4 }}>
+                {activeRoute}
+              </Heading>
+            ) : null}
+            {isCompact ? null : (
+              <Tooltip label={t('common.go_back')}>
                 <IconButton
-                  aria-label={t('common.theme')}
-                  variant="ghost"
-                  icon={colorMode === 'light' ? <MoonIcon h="20px" w="20px" /> : <SunIcon h="20px" w="20px" />}
-                  onClick={toggleColorMode}
+                  mt={1}
+                  colorScheme="blue"
+                  aria-label={t('common.go_back')}
+                  onClick={goBack}
+                  size="sm"
+                  icon={<ArrowCircleLeft width={20} height={20} />}
                 />
               </Tooltip>
-              {languageSwitcher}
-              <Box ml={1} mr={4}>
-                <Menu {...menuProps} gutter={0}>
-                  <MenuButton
-                    py={2}
-                    transition="all 0.3s"
-                    _focus={{ boxShadow: 'none' }}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                  >
-                    <HStack>
-                      {!isCompact && <Text fontWeight="bold">{user?.name}</Text>}
-                      <Avatar h="40px" w="40px" fontSize="0.8rem" lineHeight="2rem" src={avatar} name={user?.name} />
-                    </HStack>
-                  </MenuButton>
-                  <MenuList
-                    bg={useColorModeValue('white', 'gray.900')}
-                    borderColor={useColorModeValue('gray.200', 'gray.700')}
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                  >
-                    <MenuItem onClick={goToProfile} w="100%">
-                      {t('account.title')}
-                    </MenuItem>
-                    <MenuItem onClick={logout}>{t('common.logout')}</MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-            </Flex>
-          </Box>
+            )}
+          </Flex>
+          <Flex alignItems="center" flexDirection="row">
+            {rightElements}
+            {favoritesButton}
+            <Tooltip hasArrow label={t('common.theme')}>
+              <IconButton
+                aria-label={t('common.theme')}
+                variant="ghost"
+                icon={colorMode === 'light' ? <MoonIcon h="20px" w="20px" /> : <SunIcon h="20px" w="20px" />}
+                onClick={toggleColorMode}
+              />
+            </Tooltip>
+            {isCompact ? null : languageSwitcher}
+            <Box ml={1} mr={4}>
+              <Menu {...menuProps} gutter={0}>
+                <MenuButton
+                  py={2}
+                  transition="all 0.3s"
+                  _focus={{ boxShadow: 'none' }}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                >
+                  <HStack>
+                    {!isCompact && <Text fontWeight="bold">{user?.name}</Text>}
+                    <Avatar h="40px" w="40px" fontSize="0.8rem" lineHeight="2rem" src={avatar} name={user?.name} />
+                  </HStack>
+                </MenuButton>
+                <MenuList
+                  bg={useColorModeValue('white', 'gray.900')}
+                  borderColor={useColorModeValue('gray.200', 'gray.700')}
+                  onMouseEnter={onMouseEnter}
+                  onMouseLeave={onMouseLeave}
+                >
+                  <MenuItem onClick={goToProfile} w="100%">
+                    {t('account.title')}
+                  </MenuItem>
+                  <MenuItem onClick={logout}>{t('common.logout')}</MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+          </Flex>
         </Flex>
       </Flex>
     </Portal>

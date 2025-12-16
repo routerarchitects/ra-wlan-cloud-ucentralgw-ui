@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Divider, Flex, Heading, Spacer, Tag, Text, VStack } from '@chakra-ui/react';
+import { Divider, Flex, Heading, Spacer, Tag, Text, VStack, Box } from '@chakra-ui/react';
 import { parsePhoneNumber } from 'libphonenumber-js';
 import { useTranslation } from 'react-i18next';
 import ActivateEmailMfaButton from './ActivateEmailMfaButton';
@@ -43,32 +43,39 @@ const MultiFactorAuthProfile = () => {
   return (
     <Card>
       <CardHeader>
-        <Heading size="md">{t('account.mfa')}</Heading>
-        <Tag colorScheme={currentMfaMethod ? 'green' : 'red'} fontSize="lg" fontWeight="bold" ml={2}>
+        <Heading size={{ base: 'sm', md: 'md' }}>{t('account.mfa')}</Heading>
+        <Tag
+          colorScheme={currentMfaMethod ? 'green' : 'red'}
+          fontSize={{ base: 'sm', md: 'lg' }}
+          fontWeight="bold"
+          ml={{ base: 0, md: 2 }}
+        >
           {currentMfaMethod ? t('profile.enabled').toUpperCase() : t('profile.disabled').toUpperCase()}
         </Tag>
       </CardHeader>
-      <CardBody display="block">
-        <VStack spacing={4} divider={<Divider />} mt={4}>
-          <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
-            <Heading size="sm">Authenticator App</Heading>
-            <Spacer />
-            <Text textColor="gray.400" mr={2}>
-              Recommended
-            </Text>
-            {currentMfaMethod === 'authenticator' ? <DeactivateMfaButton /> : <ActivateGoogleAuthenticatorButton />}
-          </Flex>
-          <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
-            <Heading size="sm">Email</Heading>
-            <Spacer />
-            {currentMfaMethod === 'email' ? <DeactivateMfaButton /> : <ActivateEmailMfaButton />}
-          </Flex>
-          <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
-            <Heading size="sm">SMS</Heading>
-            <Spacer />
-            <ActivateSmsAuthButton currentMfaMethod={currentMfaMethod} phoneNumber={phoneNumber} />
-          </Flex>
-        </VStack>
+      <CardBody display="block" p={4}>
+        <Box overflowX="auto">
+          <VStack spacing={4} divider={<Divider />} mt={4} minW="500px">
+            <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
+              <Heading size="sm">Authenticator App</Heading>
+              <Spacer />
+              <Text textColor="gray.400" mr={2}>
+                Recommended
+              </Text>
+              {currentMfaMethod === 'authenticator' ? <DeactivateMfaButton /> : <ActivateGoogleAuthenticatorButton />}
+            </Flex>
+            <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
+              <Heading size="sm">Email</Heading>
+              <Spacer />
+              {currentMfaMethod === 'email' ? <DeactivateMfaButton /> : <ActivateEmailMfaButton />}
+            </Flex>
+            <Flex w="100%" alignItems="center" justifyContent="center" h="40px">
+              <Heading size="sm">SMS</Heading>
+              <Spacer />
+              <ActivateSmsAuthButton currentMfaMethod={currentMfaMethod} phoneNumber={phoneNumber} />
+            </Flex>
+          </VStack>
+        </Box>
       </CardBody>
     </Card>
   );
