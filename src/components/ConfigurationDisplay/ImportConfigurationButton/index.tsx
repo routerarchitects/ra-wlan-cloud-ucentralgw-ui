@@ -2,7 +2,7 @@ import React from 'react';
 import { IconButton, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { UploadSimple } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
-import ImportConfigurationModal from './ImportConfigurationModal';
+import ImportConfigurationModal from './Modal';
 
 interface Props {
   setConfig: (v: any) => void;
