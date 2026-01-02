@@ -22,7 +22,7 @@ import ExpertModeButton from './ExpertModeButton';
 import ImportConfigurationButton from './ImportConfigurationButton';
 import ViewConfigErrorsModal from './ViewConfigErrorsModal';
 import ViewConfigWarningsModal from './ViewConfigWarningsModal';
-import ViewJsonConfigModal from './ViewJsonConfigModal';
+import ViewJsonConfigModal from './ViewJsonConfig';
 import useConfigurationTabs from './useConfigurationTabs';
 import { ConfigurationSection } from './types';
 

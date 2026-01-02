@@ -17,7 +17,7 @@ import { v4 as uuid } from 'uuid';
 import { CloseButton } from 'components/Buttons/CloseButton';
 import { SaveButton } from 'components/Buttons/SaveButton';
 import { Modal } from 'components/Modals/Modal';
-import { uppercaseFirstLetter } from '../utils/stringHelper';
+import { uppercaseFirstLetter } from 'helpers/stringHelper';
 
 const fileToString = async (file: File): Promise<string | null> =>
   new Promise((resolve) => {

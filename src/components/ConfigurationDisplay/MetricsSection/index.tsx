@@ -18,7 +18,7 @@ import Telemetry from './Telemetry';
 import WifiFrames from './WifiFrames';
 import WifiScan from './WifiScan';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
-import { ConfigurationSectionShape } from 'components/ConfigurationDisplay/constants/propShapes';
+import { ConfigurationSectionShape } from 'constants/propShapes';
 
 const propTypes = {
   editing: PropTypes.bool.isRequired,

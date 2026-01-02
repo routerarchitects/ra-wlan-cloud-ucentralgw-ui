@@ -15,7 +15,7 @@ import { Flask } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 import { SaveButton } from 'components/Buttons/SaveButton';
 import { Modal } from 'components/Modals/Modal';
-import { uppercaseFirstLetter } from '../utils/stringHelper';
+import { uppercaseFirstLetter } from 'helpers/stringHelper';
 
 const configurationSections = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'third-party'];
 

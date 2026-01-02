@@ -10,7 +10,7 @@ import SectionGeneralCard from '../common/SectionGeneralCard';
 import ThirdParty from './ThirdParty';
 import { THIRD_PARTY_SCHEMA } from './thirdPartyConstants';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
-import { ConfigurationSectionShape } from 'components/ConfigurationDisplay/constants/propShapes';
+import { ConfigurationSectionShape } from 'constants/propShapes';
 
 const propTypes = {
   editing: PropTypes.bool.isRequired,

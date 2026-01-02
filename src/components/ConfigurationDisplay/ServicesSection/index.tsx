@@ -31,7 +31,7 @@ import { getSubSectionDefaults, SERVICES_SCHEMA } from './servicesConstants';
 import Ssh from './Ssh';
 import WifiSteering from './WifiSteering';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
-import { ConfigurationSectionShape } from 'components/ConfigurationDisplay/constants/propShapes';
+import { ConfigurationSectionShape } from 'constants/propShapes';
 
 const propTypes = {
   editing: PropTypes.bool.isRequired,
