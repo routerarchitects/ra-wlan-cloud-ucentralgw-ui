@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Card } from 'components/Containers/Card';
 import { CardBody } from 'components/Containers/Card/CardBody';
 import { CardHeader } from 'components/Containers/Card/CardHeader';
-import FileInputFieldModal from 'components/Form/Fields/FileInputFieldModal';
+import FileInputFieldModal from 'components/FormFields/FileInputFieldModal';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';
 import { testPemCertificate, testPemPrivateKey } from '../utils/formTests';

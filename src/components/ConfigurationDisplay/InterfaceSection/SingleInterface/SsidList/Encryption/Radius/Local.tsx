@@ -8,7 +8,7 @@ import {
   INTERFACE_SSID_RADIUS_LOCAL_USER_SCHEMA,
 } from '../../../../interfacesConstants';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { StringField } from 'components/Form/Fields/StringField';
 
 const propTypes = {

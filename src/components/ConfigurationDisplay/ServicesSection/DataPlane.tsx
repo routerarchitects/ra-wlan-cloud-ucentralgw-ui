@@ -5,7 +5,7 @@ import { SERVICES_INGRESS_FILTER_SCHEMA } from './servicesConstants';
 import { Card } from 'components/Containers/Card';
 import { CardBody } from 'components/Containers/Card/CardBody';
 import { CardHeader } from 'components/Containers/Card/CardHeader';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { StringField } from 'components/Form/Fields/StringField';
 
 const propTypes = {

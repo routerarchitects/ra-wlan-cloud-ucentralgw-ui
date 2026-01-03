@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { HStack } from '@chakra-ui/react';
 import { INTERFACE_ETHERNET_SCHEMA } from '../interfacesConstants';
 import MultiSelectField from 'components/Form/Fields/MultiSelectField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';
 import { ToggleField } from 'components/Form/Fields/ToggleField';

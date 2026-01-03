@@ -5,7 +5,7 @@ import { INTERFACE_IPV6_PORT_FORWARD_SCHEMA, INTERFACE_IPV6_TRAFFIC_ALLOW_SCHEMA
 import DhcpIpV6 from './DhcpIpV6';
 import { CreatableSelectField } from 'components/Form/Fields/CreatableSelectField';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { PortRangeField } from 'components/Form/Fields/PortRangeField';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';

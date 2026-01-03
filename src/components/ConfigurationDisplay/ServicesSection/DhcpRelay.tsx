@@ -6,7 +6,7 @@ import { CardBody } from 'components/Containers/Card/CardBody';
 import { CardHeader } from 'components/Containers/Card/CardHeader';
 import MultiSelectField from 'components/Form/Fields/MultiSelectField';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';
 

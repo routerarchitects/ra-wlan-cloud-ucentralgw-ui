@@ -1,44 +1,59 @@
-import React from 'react';
-import { FormControl, FormLabel, Text, Box } from '@chakra-ui/react';
+import React, { useCallback, useMemo } from 'react';
 import { useField } from 'formik';
+import ResourcePicker from './ResourcePicker';
 
-// TODO: Stub - ConfigurationResourcePicker from owprov-ui not available
+// Note: Gateway doesn't have Resources API like Provisioning does
+// This component will show an empty resource list by default
+// Resources would need to be provided externally if needed
+
 interface ConfigurationResourcePickerProps {
   name: string;
-  label?: string;
-  isDisabled?: boolean;
-  resourceType?: string;
+  prefix: string;
+  defaultValue: (t: any, useDefault: boolean) => any;
+  isDisabled: boolean;
+  blockedIds?: string[];
 }
 
 const ConfigurationResourcePicker: React.FC<ConfigurationResourcePickerProps> = ({
   name,
-  label = 'Resource',
-  isDisabled = false,
+  prefix,
+  defaultValue,
+  isDisabled,
+  blockedIds = [],
 }) => {
-  const [{ value }] = useField<any>(name);
+  const [{ value }, , { setValue }] = useField(name);
 
-  // Safely convert value to string - it might be an object
-  const displayValue = React.useMemo(() => {
-    if (!value) return 'No resource selected';
-    if (typeof value === 'string') return value;
-    if (typeof value === 'object') {
-      // If it's an object, try to extract a meaningful identifier
-      if (value.__variableBlock?.[0]) return `Resource: ${value.__variableBlock[0]}`;
-      if (value.id) return `Resource: ${value.id}`;
-      return 'Resource configured';
-    }
-    return String(value);
-  }, [value]);
+  // Gateway doesn't have resources API - return empty array
+  // In a real implementation, resources could be passed as props or fetched differently
+  const availableResources = useMemo(() => {
+    return [];
+  }, []);
+
+  const getValue = () => {
+    if (!value || !value.__variableBlock) return '';
+    return value.__variableBlock[0];
+  };
+
+  const onChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      if (e.target.value === '') setValue(defaultValue((key: string) => key, true).cast());
+      else {
+        const newObj: any = {};
+        newObj.__variableBlock = [e.target.value];
+        setValue(newObj);
+      }
+    },
+    [defaultValue, setValue],
+  );
 
   return (
-    <FormControl isDisabled={isDisabled}>
-      <FormLabel>{label}</FormLabel>
-      <Box>
-        <Text fontSize="sm">{displayValue}</Text>
-        <Text fontSize="xs" color="orange.500" mt={1}>⚠️ Stub - Full implementation needed</Text>
-      </Box>
-    </FormControl>
+    <ResourcePicker
+      value={getValue()}
+      onChange={onChange}
+      resources={availableResources}
+      isDisabled={isDisabled}
+    />
   );
 };
 
-export default React.memo(ConfigurationResourcePicker);
+export default ConfigurationResourcePicker;

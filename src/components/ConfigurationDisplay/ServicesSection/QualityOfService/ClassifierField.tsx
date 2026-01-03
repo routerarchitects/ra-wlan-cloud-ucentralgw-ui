@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { SERVICES_CLASSIFIER_DNS_SCHEMA, SERVICES_CLASSIFIER_PORTS_SCHEMA } from '../servicesConstants';
 import { Card } from 'components/Containers/Card';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';
 import { ToggleField } from 'components/Form/Fields/ToggleField';

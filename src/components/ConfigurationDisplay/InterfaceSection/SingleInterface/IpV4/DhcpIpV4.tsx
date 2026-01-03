@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { INTERFACE_IPV4_DHCP_LEASE_SCHEMA, INTERFACE_IPV4_DHCP_SCHEMA } from '../../interfacesConstants';
 import StaticLeaseOffsetField from './StaticLeaseOffsetField';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { StringField } from 'components/Form/Fields/StringField';
 import { ToggleField } from 'components/Form/Fields/ToggleField';
 import { useFastField } from 'hooks/useFastField';

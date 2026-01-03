@@ -4,7 +4,7 @@ import { INTERFACE_IPV4_PORT_FORWARD_SCHEMA, INTERFACE_IPV4_SCHEMA } from '../..
 // import LockedIpv4 from './LockedIpv4'; // Temporarily disabled
 import StaticIpV4 from './StaticIpV4';
 import ConfigurationResourcePicker from 'components/CustomFields/ConfigurationResourcePicker';
-import ObjectArrayFieldModal from 'components/Form/Fields/ObjectArrayFieldModal';
+import ObjectArrayFieldModal from 'components/FormFields/ObjectArrayFieldModal';
 import { PortRangeField } from 'components/Form/Fields/PortRangeField';
 import { SelectField } from 'components/Form/Fields/SelectField';
 import { StringField } from 'components/Form/Fields/StringField';
