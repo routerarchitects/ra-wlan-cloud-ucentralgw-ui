@@ -110,26 +110,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
   }, [activeConfigurations, tabsRemovedConfiguration]);
 
   const onImportConfig = (newConf: any) => {
-      // Import modal returns array of {configuration: 'str', ...} or object?
-      // Step 84: ImportConfigModal returns `newVal` which is array of config objects.
-      // Wait, `ImportConfigurationModal` logic: transformComputedConfigToEditable -> array of sections.
-      // But `ConfigurationDisplay` expects simple object.
-      // I need to adapt `ImportConfigurationModal` result or `onImportConfig`.
-      
-      // Adaptation: Merge array into single object
-      // Adaptation: Merge array into single object
-      // Logic handled in valid Array check below.
-      // But `ImportConfigurationModal` in step 84 sets value to `newVal`.
-      // `newVal` is `final.map(...)` where `final` comes from `transformComputedConfigToEditable`.
-      // `transformComputedConfigToEditable` creates array of objects with `configuration` as OBJECT (before stringify).
-      // `ImportConfigurationModal` stringifies it.
-      
-      // I should fix `ImportConfigurationModal` to return the raw object if possible, or parse here.
-      // The modal (step 101) logic:
-      // `const newVal = final.map(conf => ({ ...conf, configuration: JSON.stringify(conf.configuration) }))`
-      // So passed value is array of objects where configuration is a string.
-
-      // I'll parse it here.
+      // Parse imported configuration array into object format
       const parsedMatches: Record<string, any> = {};
       if (Array.isArray(newConf)) {
             newConf.forEach((c: any) => {
@@ -145,7 +126,11 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                 }
             });
       }
-      parseConfig(parsedMatches);
+      setActiveConfigurations([]);
+      // Use setTimeout to allow React to unmount components, then call parseConfig
+      setTimeout(() => {
+          parseConfig(parsedMatches);
+      }, 200);
   };
   
   // Default configuration for Expert Button (Schema defaults)
