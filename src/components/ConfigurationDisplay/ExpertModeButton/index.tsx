@@ -65,11 +65,12 @@ type Props = {
       configuration: object;
     }
   >;
+  currentConfiguration: Record<string, unknown>;
   setConfig: (newConfig: object) => void;
   isDisabled: boolean;
 };
 
-const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, setConfig, isDisabled }: Props) => {
+const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, currentConfiguration, setConfig, isDisabled }: Props) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [error, { on, off }] = useBoolean();
@@ -106,16 +107,10 @@ const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, setConfi
 
   React.useEffect(() => {
     if (isOpen) {
-      const newConfig: Record<string, unknown> = {};
-      for (const [section, value] of Object.entries(defaultConfiguration)) {
-        if (activeConfigurations.includes(section)) {
-          // @ts-ignore
-          newConfig[section] = value.configuration;
-        }
-      }
-      setTempValue(JSON.stringify(newConfig, null, 4));
+      // Use currentConfiguration instead of defaultConfiguration to show actual values
+      setTempValue(JSON.stringify(currentConfiguration, null, 4));
     }
-  }, [isOpen]);
+  }, [isOpen, currentConfiguration]);
 
   return (
     <>

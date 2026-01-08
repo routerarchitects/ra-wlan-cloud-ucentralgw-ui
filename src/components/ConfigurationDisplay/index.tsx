@@ -172,6 +172,15 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
           />
           <ExpertModeButton 
               defaultConfiguration={defaultConfiguration}
+              currentConfiguration={{
+                  ...(activeConfigurations.includes('globals') && { globals: globals.data.configuration }),
+                  ...(activeConfigurations.includes('unit') && { unit: unit.data.configuration }),
+                  ...(activeConfigurations.includes('metrics') && { metrics: metrics.data.configuration }),
+                  ...(activeConfigurations.includes('services') && { services: services.data.configuration }),
+                  ...(activeConfigurations.includes('radios') && { radios: radios.data.configuration }),
+                  ...(activeConfigurations.includes('interfaces') && { interfaces: interfaces.data.configuration }),
+                  ...(activeConfigurations.includes('third-party') && { 'third-party': thirdParty.data.configuration }),
+              }}
               activeConfigurations={activeConfigurations}
               isDisabled={false} // Editing allowed
               setConfig={onImportConfig}
