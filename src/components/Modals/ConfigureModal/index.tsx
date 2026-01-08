@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { ClipboardText } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
-import { SaveButton } from '../../Buttons/SaveButton';
+import { PushButton } from '../../Buttons/PushButton';
 import { Modal } from '../Modal';
 import { FileInputButton } from 'components/Buttons/FileInputButton';
 import ConfigurationDisplay from 'components/ConfigurationDisplay';
@@ -131,7 +131,7 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
       topRightButtons={
         <>
         {configModals}
-        <SaveButton onClick={onSave} isDisabled={!isValid || newConfig.length === 0} isLoading={configure.isLoading} />
+        <PushButton onClick={onSave} isDisabled={!isValid || newConfig.length === 0} isLoading={configure.isLoading} />
         </>
       }
     >
