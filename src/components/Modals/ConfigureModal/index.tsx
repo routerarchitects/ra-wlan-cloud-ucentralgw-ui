@@ -15,9 +15,10 @@ import {
 } from '@chakra-ui/react';
 import { ClipboardText } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
-import { SaveButton } from '../../Buttons/SaveButton';
+import { PushButton } from '../../Buttons/PushButton';
 import { Modal } from '../Modal';
 import { FileInputButton } from 'components/Buttons/FileInputButton';
+import ConfigurationDisplay from 'components/ConfigurationDisplay';
 import { useConfigureDevice } from 'hooks/Network/Commands';
 import { useGetDevice } from 'hooks/Network/Devices';
 import { AxiosError } from 'models/Axios';
@@ -37,6 +38,7 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
   const getDevice = useGetDevice({ serialNumber });
 
   const [newConfig, setNewConfig] = React.useState('');
+  const [configModals, setConfigModals] = React.useState<React.ReactNode>(null);
 
   const onChange = React.useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewConfig(e.target.value);
@@ -58,7 +60,13 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
   const onSave = () => {
     try {
       const config = JSON.parse(newConfig);
-      configure.mutate(config, {
+      // Preserve uuid from original configuration if not already present
+      const originalConfig = getDevice.data?.configuration as Record<string, any> | undefined;
+      const configToSend = {
+        ...config,
+        ...(originalConfig?.uuid && !config.uuid && { uuid: originalConfig.uuid })
+      };
+      configure.mutate(configToSend, {
         onSuccess: (data) => {
           if (data.errorCode === 0) {
             toast({
@@ -112,12 +120,19 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
     }
   }, [modalProps.isOpen]);
 
+  const onConfigChange = (currentConfig: Record<string, any>) => {
+    setNewConfig(JSON.stringify(currentConfig, null, 4));
+  };
+
   return (
     <Modal
       {...modalProps}
       title={t('controller.configure.title')}
       topRightButtons={
-        <SaveButton onClick={onSave} isDisabled={!isValid || newConfig.length === 0} isLoading={configure.isLoading} />
+        <>
+        {configModals}
+        <PushButton onClick={onSave} isDisabled={!isValid || newConfig.length === 0} isLoading={configure.isLoading} />
+        </>
       }
     >
       <>
@@ -135,7 +150,7 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
           <AlertDescription>{t('controller.configure.warning')}</AlertDescription>
         </Alert>
         <FormControl isInvalid={!isValid && newConfig.length > 0}>
-          <FormLabel>{t('configurations.one')}</FormLabel>
+          {/* <FormLabel>{t('configurations.one')}</FormLabel>
           <Flex mb={2} wrap={'wrap'} gap={2}>
             <Box w="240px">
               <FileInputButton
@@ -154,8 +169,16 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
             >
               Current Configuration
             </Button>
-          </Flex>
-          <Textarea height="auto" minH="600px" value={newConfig} onChange={onChange} />
+          </Flex> */}
+          {getDevice.data && !getDevice.isFetching ? (
+            <ConfigurationDisplay 
+                configuration={getDevice.data.configuration as Record<string, any>} 
+                onConfigChange={onConfigChange}
+                isLoading={getDevice.isFetching}
+                renderModals={setConfigModals}
+            />
+          ) : null}
+          <Textarea height="auto" minH="600px" value={newConfig} onChange={onChange} hidden />
           <FormErrorMessage>{t('controller.configure.invalid')}</FormErrorMessage>
         </FormControl>
       </>
