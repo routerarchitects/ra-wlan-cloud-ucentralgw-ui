@@ -4,7 +4,7 @@ Dual License Summary
 This project is dual-licensed.
 
 1. **Upstream Code**
-   Portions of the code are derived from the Telecom Infra Project (TIP) 'openlan-cgw' repository,
+   Portions of the code are derived from the Telecom Infra Project (TIP) 'wlan-cloud-ucentralgw-ui' repository,
    licensed under the BSD 3-Clause License.
    See LICENSE-BSD for the full text.
 
