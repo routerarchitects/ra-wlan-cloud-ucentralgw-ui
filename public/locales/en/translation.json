@@ -179,6 +179,7 @@
     "firmware_upgrade_success": "Successfully started device upgrade!",
     "image_date": "Image Date",
     "keep_redirector": "Keep Redirector?",
+    "use_local_certificate": "Use Local Certificate",
     "other": "Commands",
     "override_dfs": "Override DFS",
     "reboot": "Reboot",
