@@ -2,7 +2,7 @@ import * as React from 'react';
 import { FormControl, FormErrorMessage, FormLabel, Input } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 import { NumberField } from 'components/Form/Fields/NumberField';
-import { testIpv4 } from '../../../../../common/utils/formTests';
+import { testIpv4 } from '../../../../common/utils/formTests';
 import { useFastField } from 'hooks/useFastField';
 
 type Props = {

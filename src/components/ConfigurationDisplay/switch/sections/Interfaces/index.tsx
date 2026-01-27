@@ -86,6 +86,7 @@ const InterfaceSection = ({ editing, setSection, sectionInformation, removeSub }
       innerRef={sectionRef}
       initialValues={{ ...sectionInformation.data, configuration: initialConfiguration, name: 'Interfaces' }}
       validationSchema={INTERFACES_SCHEMA(t)}
+      validateOnMount
     >
       {({ values }) => (
         <>

@@ -4,7 +4,7 @@ import { Formik } from 'formik';
 import PropTypes from 'prop-types';
 import isEqual from 'react-fast-compare';
 import { useTranslation } from 'react-i18next';
-import { CREATE_INTERFACE_SCHEMA, SINGLE_INTERFACE_SCHEMA } from './interfacesConstants';
+import { SINGLE_INTERFACE_SCHEMA } from './interfacesConstants';
 import { CloseButton } from 'components/Buttons/CloseButton';
 import { CreateButton } from 'components/Buttons/CreateButton';
 import { SaveButton } from 'components/Buttons/SaveButton';
@@ -28,7 +28,8 @@ const CreateInterfaceButton = ({ editing, arrayHelpers: { push: pushInterface },
   const { form, formRef } = useFormRef();
 
   const addInterface = ({ role, name }) => {
-    pushInterface(SINGLE_INTERFACE_SCHEMA(t, true, role, name, true).cast());
+    const base = SINGLE_INTERFACE_SCHEMA(t, true, true).cast();
+    pushInterface({ ...base, name, role });
     setTabIndex(arrLength);
     onClose();
   };
@@ -62,8 +63,7 @@ const CreateInterfaceButton = ({ editing, arrayHelpers: { push: pushInterface },
           <ModalBody>
             <Formik
               innerRef={formRef}
-              initialValues={CREATE_INTERFACE_SCHEMA(t).cast()}
-              validationSchema={CREATE_INTERFACE_SCHEMA(t)}
+              initialValues={{ name: '', role: 'upstream' }}
               onSubmit={({ name, role }, { setSubmitting, resetForm }) => {
                 setSubmitting(true);
                 addInterface({ name, role });
@@ -80,10 +80,7 @@ const CreateInterfaceButton = ({ editing, arrayHelpers: { push: pushInterface },
                   isRequired
                   options={[
                     { value: 'upstream', label: 'upstream' },
-                    {
-                      value: 'downstream',
-                      label: 'downstream',
-                    },
+                    { value: 'downstream', label: 'downstream' },
                   ]}
                 />
               </Box>

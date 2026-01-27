@@ -70,12 +70,6 @@ export const ENCRYPTION_OPTIONS = [
 ];
 export const ENCRYPTION_PROTOS_NO_6G = ['owe-transition'];
 
-export const CREATE_INTERFACE_SCHEMA = (t) =>
-  object().shape({
-    name: string().required(t('form.required')).default(''),
-    role: string().required(t('form.required')).default('upstream'),
-  });
-
 export const INTERFACE_PASSPOINT_ICONS_SCHEMA = (t, useDefault = false) => {
   const shape = object()
     .shape({
@@ -579,25 +573,6 @@ export const INTERFACE_SSID_SCHEMA = (t, useDefault = false) => {
   return useDefault ? shape : shape.nullable().default(undefined);
 };
 
-export const INTERFACE_IPV4_DHCP_SCHEMA = (t, useDefault = false) => {
-  const shape = object()
-    .shape({
-      'lease-first': number().required(t('form.required')).positive().integer().default(1),
-      'lease-count': number().required(t('form.required')).positive().integer().default(128),
-      'lease-time': string()
-        .required(t('form.required'))
-        .test('ipv4_dhcp.lease-time', t('form.invalid_lease_time'), testLeaseTime)
-        .default('6h'),
-      'relay-server': string().default(undefined),
-    })
-    .default({
-      'lease-first': 1,
-      'lease-count': 128,
-      'lease-time': '6h',
-    });
-
-  return useDefault ? shape : shape.nullable().default(undefined);
-};
 
 export const INTERFACE_IPV4_DHCP_LEASE_SCHEMA = (t, useDefault = false) => {
   const shape = object()
@@ -650,56 +625,6 @@ export const INTERFACE_IPV4_PORT_FORWARD_SCHEMA = (t, useDefault = false) => {
     'internal-port': string()
       .test('ipv4-internal-test', t('form.invalid_port_range'), isValidPortRange)
       .default('2000-2010'),
-  });
-
-  return useDefault ? shape : shape.nullable().default(undefined);
-};
-export const INTERFACE_IPV4_SCHEMA = (t, useDefault = false) => {
-  const shape = object().shape({
-    addressing: string().required(t('form.required')).default('dynamic'),
-    subnet: string().when('addressing', {
-      is: 'dynamic',
-      then: string(),
-      otherwise: string()
-        .test('test-ipv4-subnet', t('form.invalid_ipv4'), (v) => {
-          if (v === 'auto/24') return true;
-          return testIpv4(v);
-        })
-        .test('test-ipv4-subnet-static-d', t('form.invalid_static_ipv4_d'), (v) => {
-          if (v === 'auto/24') return true;
-          return testStaticIpv4ClassD(v);
-        })
-        .test('test-ipv4-subnet-static-e', t('form.invalid_static_ipv4_e'), (v) => {
-          if (v === 'auto/24') return true;
-          return testStaticIpv4ClassE(v);
-        })
-        .required(t('form.required'))
-        .default('192.168.1.1/24'),
-    }),
-    gateway: string().when('addressing', {
-      is: 'dynamic',
-      then: string().nullable(),
-      otherwise: string()
-        .test('test-ipv4-subnet', t('form.invalid_ipv4'), testIpv4)
-        .required(t('form.required'))
-        .default('192.168.1.1'),
-    }),
-    'send-hostname': bool().when('addressing', {
-      is: 'dynamic',
-      then: bool().nullable(),
-      otherwise: bool().required(t('form.required')).default(true),
-    }),
-    'use-dns': array().when('addressing', {
-      is: 'dynamic',
-      then: array().nullable(),
-      otherwise: array().of(string()).default([]),
-    }),
-    'port-forward': array().when('addressing', {
-      is: 'dynamic',
-      then: array().nullable(),
-      otherwise: array().of(object()).default([]),
-    }),
-    dhcp: INTERFACE_IPV4_DHCP_SCHEMA(t, useDefault),
   });
 
   return useDefault ? shape : shape.nullable().default(undefined);
@@ -824,66 +749,119 @@ export const INTERFACE_TUNNEL_SCHEMA = (t, useDefault = false) => {
 export const INTERFACE_ETHERNET_SCHEMA = (t, useDefault = false) => {
   const shape = object().shape({
     'select-ports': array().of(string()).min(1, t('form.required')).default([]),
-    multicast: bool().default(true),
-    learning: bool().default(true),
-    isolate: bool().default(false),
-    macaddr: string()
-      .test('interface.ethernet.mac.length', t('form.invalid_mac_uc'), (v) => (v === undefined ? true : testUcMac(v)))
-      .default(undefined),
-    'reverse-path': bool().default(false),
-    'vlan-tag': string().default('auto'),
+    'vlan-tag': string().oneOf(['tagged', 'un-tagged']).default('un-tagged'),
+    pvid: bool().default(true),
   });
 
-  return useDefault
-    ? shape
-    : shape.nullable().default({
-        'select-ports': [],
-        multicast: true,
-        learning: true,
-        isolate: false,
-        macaddr: undefined,
-        'reverse-path': false,
-        'vlan-tag': 'auto',
-      });
+  return useDefault ? shape : shape.nullable().default(undefined);
 };
 
-export const SINGLE_INTERFACE_SCHEMA = (
-  t,
-  useDefault = false,
-  role = 'upstream',
-  name = '',
-  initialCreation = false,
-) => {
+export const INTERFACE_VLAN_SCHEMA = (t, useDefault = false) => {
   const shape = object().shape({
-    name: string().required(t('form.required')).default(name),
-    role: string()
-      .required(t('form.required'))
-      .test('role-test', t('form.missing_interface_upstream'), (_, { from }) => {
-        const rootConfig = from[from.length - 1];
-        const allRoles = rootConfig.value.configuration.map(({ role: v }) => v);
-        return allRoles.includes('upstream');
+    id: number().required(t('form.required')).moreThan(0).lessThan(4051).default(1),
+    proto: string().required(t('form.required')).default('802.1q'),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_SUBNET_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    prefix: string().required(t('form.required')).default(''),
+    vrf: number().integer().default(undefined),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_GATEWAY_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    prefix: string().required(t('form.required')).default(''),
+    nexthop: string().required(t('form.required')).default(''),
+    vrf: number().integer().default(undefined),
+    metric: number().integer().default(undefined),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_BROADCAST_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    prefix: string().required(t('form.required')).default(''),
+    vrf: number().integer().default(undefined),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_DHCP_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    'relay-server': string().required(t('form.required')).default(''),
+    'circuit-id-format': string().required(t('form.required')).default(''),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IGMP_GROUP_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    address: string().required(t('form.required')).default(''),
+    'egress-ports': array().of(string()).min(1, t('form.required')).default([]),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_IGMP_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    'snooping-enable': bool().default(true),
+    'querier-enable': bool().default(false),
+    'fast-leave-enable': bool().default(false),
+    'query-interval': number().integer().moreThan(0).default(60),
+    'last-member-query-interval': number().integer().moreThan(0).default(60),
+    'max-response-time': number().integer().moreThan(0).default(10),
+    version: number().integer().default(3),
+    'static-mcast-groups': array().of(INTERFACE_IGMP_GROUP_SCHEMA(t, useDefault)).default([]),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const INTERFACE_IPV4_SCHEMA = (t, useDefault = false) => {
+  const shape = object().shape({
+    addressing: string().oneOf(['static'], t('form.required')).required(t('form.required')).default('static'),
+    subnet: array()
+      .of(INTERFACE_IPV4_SUBNET_SCHEMA(t, useDefault))
+      .when('addressing', {
+        is: 'static',
+        then: array().min(1, t('form.required')).required(t('form.required')).default([]),
+        otherwise: array().default([]),
+      }),
+    gateway: array().of(INTERFACE_IPV4_GATEWAY_SCHEMA(t, useDefault)).default([]),
+    broadcast: array().of(INTERFACE_IPV4_BROADCAST_SCHEMA(t, useDefault)).default([]),
+    dhcp: INTERFACE_IPV4_DHCP_SCHEMA(t, useDefault),
+    multicast: object()
+      .shape({
+        igmp: INTERFACE_IPV4_IGMP_SCHEMA(t, useDefault),
       })
-      .default(role),
-    'isolate-hosts': bool().default(undefined),
+      .default(undefined),
+  });
+
+  return useDefault ? shape : shape.nullable().default(undefined);
+};
+
+export const SINGLE_INTERFACE_SCHEMA = (t, useDefault = false, initialCreation = false) => {
+  const shape = object().shape({
+    name: string().default(undefined),
+    role: string().oneOf(['upstream', 'downstream']).default(undefined),
     services: array().of(string()).default(undefined),
     ethernet: array()
       .of(INTERFACE_ETHERNET_SCHEMA(t, useDefault))
       .required(t('form.required'))
       .min(1, t('form.required'))
       .default([]),
-    vlan: initialCreation
-      ? object().shape().nullable().default(undefined)
-      : object().shape({
-          id: number().required(t('form.required')).moreThan(0).lessThan(4051).default(1080),
-        }),
-    ipv4: initialCreation
-      ? object()
-          .shape({ addressing: string().required(t('form.required')) })
-          .default({ addressing: 'dynamic' })
-      : INTERFACE_IPV4_SCHEMA(t, useDefault),
-    tunnel: INTERFACE_TUNNEL_SCHEMA(t, useDefault).default(undefined),
-    ssids: array().of(INTERFACE_SSID_SCHEMA(t, useDefault)).default(undefined),
-    'hostapd-bss-raw': array().of(string()).default(undefined),
+    vlan: initialCreation ? object().shape().nullable().default(undefined) : INTERFACE_VLAN_SCHEMA(t, useDefault),
+    ipv4: initialCreation ? object().shape().nullable().default(undefined) : INTERFACE_IPV4_SCHEMA(t, useDefault),
   });
 
   return useDefault ? shape : shape.nullable().default(undefined);
