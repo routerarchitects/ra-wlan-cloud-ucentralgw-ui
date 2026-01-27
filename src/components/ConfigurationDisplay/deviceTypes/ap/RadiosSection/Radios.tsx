@@ -34,20 +34,6 @@ const Radios = ({ editing, arrayHelpers, radioBands, radioBandsLength }) => {
     setTabIndex(index);
   }, []);
 
-  if (radioBandsLength === 0) {
-    return (
-      <Center>
-        <RadioPicker
-          radios={radioBands}
-          editing={editing}
-          arrayHelpers={arrayHelpers}
-          setTabIndex={setTabIndex}
-          arrLength={radioBandsLength}
-        />
-      </Center>
-    );
-  }
-
   const tabs = useMemo(
     () =>
       Array(radioBandsLength)
@@ -66,6 +52,20 @@ const Radios = ({ editing, arrayHelpers, radioBands, radioBandsLength }) => {
         )),
     [editing, radioBandsLength],
   );
+
+  if (radioBandsLength === 0) {
+    return (
+      <Center>
+        <RadioPicker
+          radios={radioBands}
+          editing={editing}
+          arrayHelpers={arrayHelpers}
+          setTabIndex={setTabIndex}
+          arrLength={radioBandsLength}
+        />
+      </Center>
+    );
+  }
 
   return (
     <Card variant="widget">

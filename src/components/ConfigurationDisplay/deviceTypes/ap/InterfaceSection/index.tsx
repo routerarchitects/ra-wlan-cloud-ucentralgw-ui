@@ -46,6 +46,9 @@ const warningTests = (values) => {
 const InterfaceSection = ({ editing, setSection, sectionInformation, removeSub }) => {
   const { t } = useTranslation();
   const [formKey, setFormKey] = useState(uuid());
+  const initialConfiguration = Array.isArray(sectionInformation.data?.configuration)
+    ? sectionInformation.data.configuration
+    : sectionInformation.data?.configuration?.configuration ?? [];
   const sectionRef = useCallback(
     (node) => {
       if (node !== null) {
@@ -81,7 +84,7 @@ const InterfaceSection = ({ editing, setSection, sectionInformation, removeSub }
     <Formik
       key={formKey}
       innerRef={sectionRef}
-      initialValues={{ ...sectionInformation.data, name: 'Interfaces' }}
+      initialValues={{ ...sectionInformation.data, configuration: initialConfiguration, name: 'Interfaces' }}
       validationSchema={INTERFACES_SCHEMA(t)}
     >
       {({ values }) => (

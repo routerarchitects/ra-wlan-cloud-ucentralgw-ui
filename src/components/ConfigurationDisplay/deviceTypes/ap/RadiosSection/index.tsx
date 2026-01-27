@@ -22,6 +22,9 @@ const propTypes = {
 const RadiosSection = ({ editing, setSection, sectionInformation, removeSub }) => {
   const { t } = useTranslation();
   const [formKey, setFormKey] = useState(uuid());
+  const initialConfiguration = Array.isArray(sectionInformation.data?.configuration)
+    ? sectionInformation.data.configuration
+    : sectionInformation.data?.configuration?.configuration ?? [];
   const sectionRef = useCallback(
     (node) => {
       if (node !== null) {
@@ -60,7 +63,7 @@ const RadiosSection = ({ editing, setSection, sectionInformation, removeSub }) =
       <Formik
         key={formKey}
         innerRef={sectionRef}
-        initialValues={{ ...sectionInformation.data, name: 'Radios' }}
+        initialValues={{ ...sectionInformation.data, configuration: initialConfiguration, name: 'Radios' }}
         validationSchema={RADIOS_SCHEMA(t)}
       >
         {({ values }) => (
