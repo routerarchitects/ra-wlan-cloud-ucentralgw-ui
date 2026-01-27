@@ -11,6 +11,7 @@ interface Props {
     unit?: any;
     metrics?: any;
     services?: any;
+    ethernet?: any;
     radios?: any;
     interfaces?: {
       configuration: any[];
@@ -33,6 +34,7 @@ const ViewJsonConfigModal = ({ configurations, activeConfigurations, isDisabled 
         unit: activeConfigurations.includes('unit') ? configurations.unit : undefined,
         metrics: activeConfigurations.includes('metrics') ? configurations.metrics : undefined,
         services: activeConfigurations.includes('services') ? configurations.services : undefined,
+        ethernet: activeConfigurations.includes('ethernet') ? configurations.ethernet : undefined,
         radios: activeConfigurations.includes('radios') ? configurations.radios : undefined,
         'third-party': activeConfigurations.includes('third-party') ? configurations['third-party'] : undefined,
       };

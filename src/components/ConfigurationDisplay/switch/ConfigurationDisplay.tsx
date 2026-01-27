@@ -11,8 +11,8 @@ import MetricsSection from './sections/Metrics';
 import { METRICS_SCHEMA } from './sections/Metrics/metricsConstants';
 import ServicesSection from './sections/Services';
 import { SERVICES_SCHEMA } from './sections/Services/servicesConstants';
-import RadiosSection from './sections/Radios';
-import { RADIOS_SCHEMA } from './sections/Radios/radiosConstants';
+import EthernetSection from './sections/Ethernet';
+import { ETHERNET_SCHEMA } from './sections/Ethernet/ethernetConstants';
 import InterfaceSection from './sections/Interfaces';
 import { INTERFACES_SCHEMA } from './sections/Interfaces/interfacesConstants';
 import ThirdPartySection from './sections/ThirdParty';
@@ -43,12 +43,12 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
   const [unit, setUnit] = useState<ConfigurationSection>({ data: { configuration: UNIT_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [metrics, setMetrics] = useState<ConfigurationSection>({ data: { configuration: METRICS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [services, setServices] = useState<ConfigurationSection>({ data: { configuration: SERVICES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
-  const [radios, setRadios] = useState<ConfigurationSection>({ data: { configuration: RADIOS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
+  const [ethernet, setEthernet] = useState<ConfigurationSection>({ data: { configuration: ETHERNET_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [interfaces, setInterfaces] = useState<ConfigurationSection>({ data: { configuration: INTERFACES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [thirdParty, setThirdParty] = useState<ConfigurationSection>({ data: { configuration: THIRD_PARTY_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
 
   const parseConfig = useCallback((config: Record<string, any>) => {
-    const keys = Object.keys(config);
+    const keys = Object.keys(config).filter((key) => key !== 'radios');
     setActiveConfigurations(keys);
 
     // Wrap configuration data in a 'configuration' property to match expected structure
@@ -56,10 +56,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
     if (keys.includes('unit')) setUnit({ data: { configuration: config.unit }, isDirty: false, invalidValues: [] });
     if (keys.includes('metrics')) setMetrics({ data: { configuration: config.metrics }, isDirty: false, invalidValues: [] });
     if (keys.includes('services')) setServices({ data: { configuration: config.services }, isDirty: false, invalidValues: [] });
-    if (keys.includes('radios')) {
-        // Radios might need special handling if array vs object, but usually object in deviceconfig
-        setRadios({ data: { configuration: config.radios }, isDirty: false, invalidValues: [] });
-    }
+    if (keys.includes('ethernet')) setEthernet({ data: { configuration: config.ethernet }, isDirty: false, invalidValues: [] });
     if (keys.includes('interfaces')) setInterfaces({ data: { configuration: config.interfaces }, isDirty: false, invalidValues: [] });
     if (keys.includes('third-party')) setThirdParty({ data: { configuration: config['third-party'] }, isDirty: false, invalidValues: [] });
   }, []);
@@ -81,12 +78,12 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
     if (activeConfigurations.includes('unit')) newConfig.unit = unit.data.configuration;
     if (activeConfigurations.includes('metrics')) newConfig.metrics = metrics.data.configuration;
     if (activeConfigurations.includes('services')) newConfig.services = services.data.configuration;
-    if (activeConfigurations.includes('radios')) newConfig.radios = radios.data.configuration;
+    if (activeConfigurations.includes('ethernet')) newConfig.ethernet = ethernet.data.configuration;
     if (activeConfigurations.includes('interfaces')) newConfig.interfaces = interfaces.data.configuration;
     if (activeConfigurations.includes('third-party')) newConfig['third-party'] = thirdParty.data.configuration;
     
     onConfigChange(newConfig);
-  }, [globals, unit, metrics, services, radios, interfaces, thirdParty, activeConfigurations]);
+  }, [globals, unit, metrics, services, ethernet, interfaces, thirdParty, activeConfigurations]);
 
   const addSubsection = useCallback((sub: string) => {
       const newSubs = [...activeConfigurations, sub];
@@ -97,7 +94,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
       if (sub === 'unit') setUnit({ data: { configuration: UNIT_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'metrics') setMetrics({ data: { configuration: METRICS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'services') setServices({ data: { configuration: SERVICES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
-      if (sub === 'radios') setRadios({ data: { configuration: RADIOS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
+      if (sub === 'ethernet') setEthernet({ data: { configuration: ETHERNET_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'interfaces') setInterfaces({ data: { configuration: INTERFACES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'third-party') setThirdParty({ data: { configuration: THIRD_PARTY_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
 
@@ -139,7 +136,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
       unit: { name: 'Unit', description: '', weight: 0, configuration: UNIT_SCHEMA(t).cast({}) },
       metrics: { name: 'Metrics', description: '', weight: 0, configuration: METRICS_SCHEMA(t).cast({}) },
       services: { name: 'Services', description: '', weight: 0, configuration: SERVICES_SCHEMA(t).cast({}) },
-      radios: { name: 'Radios', description: '', weight: 0, configuration: RADIOS_SCHEMA(t).cast({}) },
+      ethernet: { name: 'Ethernet', description: '', weight: 0, configuration: ETHERNET_SCHEMA(t).cast({}) },
       interfaces: { name: 'Interfaces', description: '', weight: 0, configuration: INTERFACES_SCHEMA(t).cast({}) },
       'third-party': { name: 'Third Party', description: '', weight: 0, configuration: THIRD_PARTY_SCHEMA(t).cast({}) },
   };
@@ -151,7 +148,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
         <>
           <ViewConfigWarningsModal 
               warnings={{
-                  globals: [], unit: [], metrics: [], services: [], radios: [], interfaces: [], 'third-party': []
+                  globals: [], unit: [], metrics: [], services: [], ethernet: [], interfaces: [], 'third-party': []
                   // Warnings mapping needs to be passed from sections. But sections don't export warnings yet in my simplified state.
                   // InterfacesSection usually has warnings. I'll need to lift them up if I want them.
                   // For now empty to avoid TS errors.
@@ -164,7 +161,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                   unit: unit.invalidValues,
                   metrics: metrics.invalidValues,
                   services: services.invalidValues,
-                  radios: radios.invalidValues,
+                  ethernet: ethernet.invalidValues,
                   interfaces: interfaces.invalidValues,
                   'third-party': thirdParty.invalidValues,
               }} 
@@ -177,7 +174,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                   ...(activeConfigurations.includes('unit') && { unit: unit.data.configuration }),
                   ...(activeConfigurations.includes('metrics') && { metrics: metrics.data.configuration }),
                   ...(activeConfigurations.includes('services') && { services: services.data.configuration }),
-                  ...(activeConfigurations.includes('radios') && { radios: radios.data.configuration }),
+                  ...(activeConfigurations.includes('ethernet') && { ethernet: ethernet.data.configuration }),
                   ...(activeConfigurations.includes('interfaces') && { interfaces: interfaces.data.configuration }),
                   ...(activeConfigurations.includes('third-party') && { 'third-party': thirdParty.data.configuration }),
               }}
@@ -193,7 +190,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                   unit: unit.data,
                   metrics: metrics.data,
                   services: services.data,
-                  radios: radios.data,
+                  ethernet: ethernet.data,
                   interfaces: interfaces.data,
                   'third-party': thirdParty.data,
               }}
@@ -203,7 +200,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
       );
       renderModals(modals);
     }
-  }, [renderModals, activeConfigurations, globals, unit, metrics, services, radios, interfaces, thirdParty, defaultConfiguration, onImportConfig, addSubsection]);
+  }, [renderModals, activeConfigurations, globals, unit, metrics, services, ethernet, interfaces, thirdParty, defaultConfiguration, onImportConfig, addSubsection]);
 
 
   return (
@@ -221,7 +218,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                 {activeConfigurations.includes('unit') && <Tab>{t('configurations.unit')}</Tab>}
                 {activeConfigurations.includes('metrics') && <Tab>{t('configurations.metrics')}</Tab>}
                 {activeConfigurations.includes('services') && <Tab>{t('configurations.services')}</Tab>}
-                {activeConfigurations.includes('radios') && <Tab>{t('configurations.radios')}</Tab>}
+                {activeConfigurations.includes('ethernet') && <Tab>Ethernet</Tab>}
                 {activeConfigurations.includes('interfaces') && <Tab>{t('configurations.interfaces')}</Tab>}
                 {activeConfigurations.includes('third-party') && <Tab>{t('configurations.third_party')}</Tab>}
               </TabList>
@@ -246,9 +243,9 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
                     <ServicesSection editing={true} setSection={setServices} sectionInformation={services} removeSub={removeSub} />
                   </TabPanel>
                 )}
-                {activeConfigurations.includes('radios') && (
+                {activeConfigurations.includes('ethernet') && (
                   <TabPanel px={{base: 0, md: 4}}>
-                    <RadiosSection editing={true} setSection={setRadios} sectionInformation={radios} removeSub={removeSub} />
+                    <EthernetSection editing={true} setSection={setEthernet} sectionInformation={ethernet} removeSub={removeSub} />
                   </TabPanel>
                 )}
                 {activeConfigurations.includes('interfaces') && (

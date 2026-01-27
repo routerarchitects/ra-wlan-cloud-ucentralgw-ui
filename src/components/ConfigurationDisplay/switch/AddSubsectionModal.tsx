@@ -74,10 +74,10 @@ const AddSubsectionModal = ({ editing, activeSubs, addSub }: Props) => {
             <Center>
               <Button
                 colorScheme="blue"
-                isDisabled={activeSubs.includes('radios')}
-                onClick={() => addNewSub('radios')}
+                isDisabled={activeSubs.includes('ethernet')}
+                onClick={() => addNewSub('ethernet')}
               >
-                {t('configurations.radios')}
+                Ethernet
               </Button>
             </Center>
             <Center>
