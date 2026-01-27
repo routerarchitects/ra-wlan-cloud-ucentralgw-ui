@@ -1,6 +1,6 @@
 import React from 'react';
-import ApConfigurationDisplay from './deviceTypes/ap';
-import SwitchConfigurationDisplay from './deviceTypes/switch';
+import ApConfigurationDisplay from './ap/ConfigurationDisplay';
+import SwitchConfigurationDisplay from './switch/ConfigurationDisplay';
 
 type Props = React.ComponentProps<typeof ApConfigurationDisplay> & {
   deviceType?: string;
