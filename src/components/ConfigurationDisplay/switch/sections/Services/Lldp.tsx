@@ -14,7 +14,7 @@ const Lldp = ({ editing }) => (
   <Card variant="widget" mb={4}>
     <CardHeader>
       <Heading size="md" borderBottom="1px solid">
-        Lldp
+        lldp
       </Heading>
     </CardHeader>
     <CardBody>

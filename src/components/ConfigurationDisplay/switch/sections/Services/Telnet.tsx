@@ -10,19 +10,19 @@ const propTypes = {
   editing: PropTypes.bool.isRequired,
 };
 
-const Http = ({ editing }) => (
+const Telnet = ({ editing }) => (
   <Card variant="widget" mb={4}>
     <CardHeader>
       <Heading size="md" borderBottom="1px solid">
-        http
+        telnet
       </Heading>
     </CardHeader>
     <CardBody>
       <SimpleGrid minChildWidth="300px" spacing="20px" mb={8} mt={2} w="100%">
         <ToggleField
-          name="configuration.http.enable"
+          name="configuration.telnet.enable"
           label="enable"
-          definitionKey="service.http.enable"
+          definitionKey="service.telnet.enable"
           isDisabled={!editing}
         />
       </SimpleGrid>
@@ -30,5 +30,5 @@ const Http = ({ editing }) => (
   </Card>
 );
 
-Http.propTypes = propTypes;
-export default React.memo(Http);
+Telnet.propTypes = propTypes;
+export default React.memo(Telnet);

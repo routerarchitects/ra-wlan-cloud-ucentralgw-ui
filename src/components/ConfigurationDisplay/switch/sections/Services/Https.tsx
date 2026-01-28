@@ -10,19 +10,19 @@ const propTypes = {
   editing: PropTypes.bool.isRequired,
 };
 
-const Http = ({ editing }) => (
+const Https = ({ editing }) => (
   <Card variant="widget" mb={4}>
     <CardHeader>
       <Heading size="md" borderBottom="1px solid">
-        http
+        https
       </Heading>
     </CardHeader>
     <CardBody>
       <SimpleGrid minChildWidth="300px" spacing="20px" mb={8} mt={2} w="100%">
         <ToggleField
-          name="configuration.http.enable"
+          name="configuration.https.enable"
           label="enable"
-          definitionKey="service.http.enable"
+          definitionKey="service.https.enable"
           isDisabled={!editing}
         />
       </SimpleGrid>
@@ -30,5 +30,5 @@ const Http = ({ editing }) => (
   </Card>
 );
 
-Http.propTypes = propTypes;
-export default React.memo(Http);
+Https.propTypes = propTypes;
+export default React.memo(Https);

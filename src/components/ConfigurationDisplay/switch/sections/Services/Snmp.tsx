@@ -10,19 +10,19 @@ const propTypes = {
   editing: PropTypes.bool.isRequired,
 };
 
-const Http = ({ editing }) => (
+const Snmp = ({ editing }) => (
   <Card variant="widget" mb={4}>
     <CardHeader>
       <Heading size="md" borderBottom="1px solid">
-        http
+        snmp
       </Heading>
     </CardHeader>
     <CardBody>
       <SimpleGrid minChildWidth="300px" spacing="20px" mb={8} mt={2} w="100%">
         <ToggleField
-          name="configuration.http.enable"
+          name="configuration.snmp.enable"
           label="enable"
-          definitionKey="service.http.enable"
+          definitionKey="service.snmp.enable"
           isDisabled={!editing}
         />
       </SimpleGrid>
@@ -30,5 +30,5 @@ const Http = ({ editing }) => (
   </Card>
 );
 
-Http.propTypes = propTypes;
-export default React.memo(Http);
+Snmp.propTypes = propTypes;
+export default React.memo(Snmp);

@@ -9,27 +9,13 @@ import { v4 as uuid } from 'uuid';
 import InternalFormAccess from '../../../common/components/InternalFormAccess';
 import SectionGeneralCard from '../../../common/components/SectionGeneralCard';
 import SubSectionPicker from '../../../common/components/SubSectionPicker';
-import AirtimePolicies from './AirtimePolicies';
-import DataPlane from './DataPlane';
-import DhcpRelay from './DhcpRelay';
-import FacebookWifi from './FacebookWifi';
-import Fingerprint from './Fingerprint';
-import Gps from './Gps';
 import Http from './Http';
-import Ieee8021x from './Ieee8021x';
-import Igmp from './Igmp';
+import Https from './Https';
 import Lldp from './Lldp';
-import Log from './Log';
-import Mdns from './Mdns';
-import Ntp from './Ntp';
-import OnlineCheck from './OnlineCheck';
-import OpenFlow from './OpenFlow';
-import QualityOfService from './QualityOfService';
-import RadiusProxy from './RadiusProxy';
-import Rtty from './Rtty';
 import { getSubSectionDefaults, SERVICES_SCHEMA } from './servicesConstants';
+import Snmp from './Snmp';
 import Ssh from './Ssh';
-import WifiSteering from './WifiSteering';
+import Telnet from './Telnet';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
 import { ConfigurationSectionShape } from 'constants/propShapes';
 
@@ -123,52 +109,17 @@ const ServicesSection = ({ editing, setSection, sectionInformation, removeSub })
               subsectionPicker={
                 <SubSectionPicker
                   editing={editing}
-                  subsections={[
-                    'airtime-policies',
-                    'data-plane',
-                    'dhcp-relay',
-                    'facebook-wifi',
-                    'fingerprint',
-                    'gps',
-                    'http',
-                    'ieee8021x',
-                    'igmp',
-                    'lldp',
-                    'log',
-                    'mdns',
-                    'ntp',
-                    'online-check',
-                    'open-flow',
-                    'quality-of-service',
-                    'radius-proxy',
-                    'rtty',
-                    'ssh',
-                    'wifi-steering',
-                  ]}
-                  onSubsectionsChange={(sub) => onSubsectionsChange(sub, setFieldValue)}
-                />
-              }
-            />
-            {isSubSectionActive('airtime-policies') && <AirtimePolicies editing={editing} />}
-            {isSubSectionActive('data-plane') && <DataPlane editing={editing} />}
-            {isSubSectionActive('dhcp-relay') && <DhcpRelay isEditing={editing} />}
-            {isSubSectionActive('facebook-wifi') && <FacebookWifi editing={editing} />}
-            {isSubSectionActive('fingerprint') && <Fingerprint isEditing={editing} />}
-            {isSubSectionActive('gps') && <Gps editing={editing} />}
+                    subsections={['http', 'https', 'lldp', 'snmp', 'ssh', 'telnet']}
+                    onSubsectionsChange={(sub) => onSubsectionsChange(sub, setFieldValue)}
+                  />
+                }
+              />
             {isSubSectionActive('http') && <Http editing={editing} />}
-            {isSubSectionActive('ieee8021x') && <Ieee8021x editing={editing} />}
-            {isSubSectionActive('igmp') && <Igmp editing={editing} />}
+            {isSubSectionActive('https') && <Https editing={editing} />}
             {isSubSectionActive('lldp') && <Lldp editing={editing} />}
-            {isSubSectionActive('log') && <Log editing={editing} />}
-            {isSubSectionActive('mdns') && <Mdns editing={editing} />}
-            {isSubSectionActive('ntp') && <Ntp editing={editing} />}
-            {isSubSectionActive('online-check') && <OnlineCheck editing={editing} />}
-            {isSubSectionActive('open-flow') && <OpenFlow editing={editing} />}
-            {isSubSectionActive('quality-of-service') && <QualityOfService editing={editing} />}
-            {isSubSectionActive('radius-proxy') && <RadiusProxy editing={editing} />}
-            {isSubSectionActive('rtty') && <Rtty editing={editing} />}
+            {isSubSectionActive('snmp') && <Snmp editing={editing} />}
             {isSubSectionActive('ssh') && <Ssh editing={editing} />}
-            {isSubSectionActive('wifi-steering') && <WifiSteering editing={editing} />}
+            {isSubSectionActive('telnet') && <Telnet editing={editing} />}
             </Masonry>
           </Box>
         </>
