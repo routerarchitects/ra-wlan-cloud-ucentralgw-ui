@@ -37,7 +37,6 @@ const Statistics = ({ editing }) => {
             label="types"
             definitionKey="metrics.statistics.types"
             options={[
-              { value: 'ssids', label: 'ssids' },
               { value: 'lldp', label: 'lldp' },
               { value: 'clients', label: 'clients' },
             ]}

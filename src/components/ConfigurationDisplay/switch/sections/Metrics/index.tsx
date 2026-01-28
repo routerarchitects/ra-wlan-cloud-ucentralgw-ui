@@ -9,14 +9,9 @@ import { v4 as uuid } from 'uuid';
 import InternalFormAccess from '../../../common/components/InternalFormAccess';
 import SectionGeneralCard from '../../../common/components/SectionGeneralCard';
 import SubSectionPicker from '../../../common/components/SubSectionPicker';
-import DhcpSnooping from './DhcpSnooping';
 import Health from './Health';
 import { getSubSectionDefaults, METRICS_SCHEMA } from './metricsConstants';
-import Realtime from './Realtime';
 import Statistics from './Statistics';
-import Telemetry from './Telemetry';
-import WifiFrames from './WifiFrames';
-import WifiScan from './WifiScan';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
 import { ConfigurationSectionShape } from 'constants/propShapes';
 
@@ -112,26 +107,13 @@ const MetricsSection = ({ editing, setSection, sectionInformation, removeSub }) 
                 subsectionPicker={
                   <SubSectionPicker
                     editing={editing}
-                    subsections={[
-                      'dhcp-snooping',
-                      'health',
-                      'realtime',
-                      'statistics',
-                      'telemetry',
-                      'wifi-frames',
-                      'wifi-scan',
-                    ]}
+                    subsections={['health', 'statistics']}
                     onSubsectionsChange={(sub) => onSubsectionsChange(sub, setFieldValue)}
                   />
                 }
               />
-              {isSubSectionActive('dhcp-snooping') && <DhcpSnooping editing={editing} />}
               {isSubSectionActive('health') && <Health editing={editing} />}
-              {isSubSectionActive('realtime') && <Realtime editing={editing} />}
               {isSubSectionActive('statistics') && <Statistics editing={editing} />}
-              {isSubSectionActive('telemetry') && <Telemetry editing={editing} />}
-              {isSubSectionActive('wifi-frames') && <WifiFrames editing={editing} />}
-              {isSubSectionActive('wifi-scan') && <WifiScan editing={editing} />}
             </Masonry>
           </Box>
         </>
