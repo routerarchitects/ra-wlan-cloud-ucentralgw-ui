@@ -26,7 +26,7 @@ const StaticLeaseOffsetField = ({ subnet, isDisabled }: Props) => {
       if (newOffset > 0) {
         onOffsetChange(newOffset);
       } else {
-        onOffsetChange(-newOffset);
+        onOffsetChange(undefined);
       }
     }
   };
@@ -35,7 +35,7 @@ const StaticLeaseOffsetField = ({ subnet, isDisabled }: Props) => {
     if (!value && subnet && isSubnetValid) {
       onIpChange(`${subnet?.split('.').slice(0, 3).join('.')}.${Number(subnet.split('.').pop()?.split('/')[0]) + 1}`);
     }
-  }, [value]);
+  }, [value, subnet, isSubnetValid]);
 
   if (!subnet || !isSubnetValid) {
     return (

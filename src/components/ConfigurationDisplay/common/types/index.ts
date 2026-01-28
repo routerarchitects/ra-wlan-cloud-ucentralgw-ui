@@ -11,3 +11,10 @@ export interface ConfigurationSection {
         explanation: string;
     }[];
 }
+
+export interface ConfigurationDisplayProps {
+    configuration: Record<string, any>;
+    onConfigChange: (config: Record<string, any>) => void;
+    isLoading?: boolean;
+    renderModals?: (modals: React.ReactNode) => void;
+}

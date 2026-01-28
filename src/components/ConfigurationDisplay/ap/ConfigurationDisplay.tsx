@@ -24,16 +24,14 @@ import ViewConfigErrorsModal from './ViewConfigErrorsModal';
 import ViewConfigWarningsModal from './ViewConfigWarningsModal';
 import ViewJsonConfigModal from './ViewJsonConfig';
 import useConfigurationTabs from '../common/hooks/useConfigurationTabs';
-import { ConfigurationSection } from '../common/types';
+import { ConfigurationDisplayProps, ConfigurationSection } from '../common/types';
 
-interface Props {
-  configuration: Record<string, any>;
-  onConfigChange: (config: Record<string, any>) => void;
-  isLoading?: boolean;
-  renderModals?: (modals: React.ReactNode) => void;
-}
-
-const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false, renderModals }: Props) => {
+const ConfigurationDisplay = ({
+  configuration,
+  onConfigChange,
+  isLoading = false,
+  renderModals,
+}: ConfigurationDisplayProps) => {
   const { t } = useTranslation();
   const { tabIndex, onTabChange, tabsWithNewConfiguration, tabsRemovedConfiguration } = useConfigurationTabs();
   
