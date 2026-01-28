@@ -40,7 +40,11 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
   const [activeConfigurations, setActiveConfigurations] = useState<string[]>([]);
   // Wrap initial state in configuration property to match expected structure
   const [globals, setGlobals] = useState<ConfigurationSection>({ data: { configuration: GLOBALS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
-  const [unit, setUnit] = useState<ConfigurationSection>({ data: { configuration: UNIT_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
+  const [unit, setUnit] = useState<ConfigurationSection>({
+    data: { configuration: UNIT_SCHEMA(t).cast({}).configuration },
+    isDirty: false,
+    invalidValues: [],
+  });
   const [metrics, setMetrics] = useState<ConfigurationSection>({ data: { configuration: METRICS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [services, setServices] = useState<ConfigurationSection>({ data: { configuration: SERVICES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
   const [ethernet, setEthernet] = useState<ConfigurationSection>({ data: { configuration: ETHERNET_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
@@ -53,7 +57,10 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
 
     // Wrap configuration data in a 'configuration' property to match expected structure
     if (keys.includes('globals')) setGlobals({ data: { configuration: config.globals }, isDirty: false, invalidValues: [] });
-    if (keys.includes('unit')) setUnit({ data: { configuration: config.unit }, isDirty: false, invalidValues: [] });
+    if (keys.includes('unit')) {
+      const unitConfig = config.unit?.configuration ?? config.unit;
+      setUnit({ data: { configuration: unitConfig }, isDirty: false, invalidValues: [] });
+    }
     if (keys.includes('metrics')) setMetrics({ data: { configuration: config.metrics }, isDirty: false, invalidValues: [] });
     if (keys.includes('services')) setServices({ data: { configuration: config.services }, isDirty: false, invalidValues: [] });
     if (keys.includes('ethernet')) setEthernet({ data: { configuration: config.ethernet }, isDirty: false, invalidValues: [] });
@@ -75,7 +82,10 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
     const newConfig: Record<string, any> = {};
     // Extract configuration from wrapped data structure
     if (activeConfigurations.includes('globals')) newConfig.globals = globals.data.configuration;
-    if (activeConfigurations.includes('unit')) newConfig.unit = unit.data.configuration;
+    if (activeConfigurations.includes('unit')) {
+      const unitConfig = unit.data.configuration?.configuration ?? unit.data.configuration;
+      newConfig.unit = unitConfig;
+    }
     if (activeConfigurations.includes('metrics')) newConfig.metrics = metrics.data.configuration;
     if (activeConfigurations.includes('services')) newConfig.services = services.data.configuration;
     if (activeConfigurations.includes('ethernet')) newConfig.ethernet = ethernet.data.configuration;
@@ -91,7 +101,13 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
       tabsWithNewConfiguration(sub, newSubs);
       // Initialize with default if needed, wrapped in configuration property
       if (sub === 'globals') setGlobals({ data: { configuration: GLOBALS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
-      if (sub === 'unit') setUnit({ data: { configuration: UNIT_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
+      if (sub === 'unit') {
+        setUnit({
+          data: { configuration: UNIT_SCHEMA(t).cast({}).configuration },
+          isDirty: false,
+          invalidValues: [],
+        });
+      }
       if (sub === 'metrics') setMetrics({ data: { configuration: METRICS_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'services') setServices({ data: { configuration: SERVICES_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
       if (sub === 'ethernet') setEthernet({ data: { configuration: ETHERNET_SCHEMA(t).cast({}) }, isDirty: false, invalidValues: [] });
@@ -133,7 +149,7 @@ const ConfigurationDisplay = ({ configuration, onConfigChange, isLoading = false
   // Default configuration for Expert Button (Schema defaults)
   const defaultConfiguration = {
       globals: { name: 'Globals', description: '', weight: 0, configuration: GLOBALS_SCHEMA(t).cast({}) },
-      unit: { name: 'Unit', description: '', weight: 0, configuration: UNIT_SCHEMA(t).cast({}) },
+      unit: { configuration: UNIT_SCHEMA(t).cast({}).configuration },
       metrics: { name: 'Metrics', description: '', weight: 0, configuration: METRICS_SCHEMA(t).cast({}) },
       services: { name: 'Services', description: '', weight: 0, configuration: SERVICES_SCHEMA(t).cast({}) },
       ethernet: { name: 'Ethernet', description: '', weight: 0, configuration: ETHERNET_SCHEMA(t).cast({}) },

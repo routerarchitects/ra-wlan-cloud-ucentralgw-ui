@@ -1,13 +1,14 @@
-import React from 'react';
-import { Box, Heading, SimpleGrid } from '@chakra-ui/react';
+import React, { useCallback, useMemo } from 'react';
+import { Box, Flex, Heading, SimpleGrid, Switch, Text } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
-import BeaconAdvertisement from './BeaconAdvertisement';
 import { Card } from 'components/Containers/Card';
 import { CardBody } from 'components/Containers/Card/CardBody';
 import { CardHeader } from 'components/Containers/Card/CardHeader';
-import { SelectField } from 'components/Form/Fields/SelectField';
+import { NumberField } from 'components/Form/Fields/NumberField';
 import { StringField } from 'components/Form/Fields/StringField';
 import { ToggleField } from 'components/Form/Fields/ToggleField';
+import { useFastField } from 'hooks/useFastField';
+import { useFormikContext } from 'formik';
 
 interface Props {
   editing: boolean;
@@ -15,6 +16,24 @@ interface Props {
 
 const Unit = ({ editing }: Props) => {
   const { t } = useTranslation();
+  const { setFieldValue } = useFormikContext();
+  const { value: multicast } = useFastField({ name: 'configuration.multicast' });
+  const hasMulticast = useMemo(() => multicast !== undefined, [multicast]);
+
+  const toggleMulticast = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFieldValue(
+        'configuration.multicast',
+        e.target.checked
+          ? {
+              'igmp-snooping-enable': false,
+              'querier-enable': false,
+            }
+          : undefined,
+      );
+    },
+    [setFieldValue],
+  );
 
   return (
     <Card variant="widget">
@@ -26,128 +45,6 @@ const Unit = ({ editing }: Props) => {
       <CardBody pb={8}>
         <Box w="100%">
           <SimpleGrid minChildWidth="300px" spacing="20px" mb={4} mt={2} w="100%">
-            <StringField
-              name="configuration.name"
-              label="name"
-              definitionKey="unit.name"
-              isDisabled={!editing}
-              isRequired
-            />
-            <StringField
-              name="configuration.location"
-              label="location"
-              definitionKey="unit.location"
-              isDisabled={!editing}
-              isRequired
-            />
-            <StringField
-              name="configuration.hostname"
-              label="hostname"
-              definitionKey="unit.hostname"
-              isDisabled={!editing}
-              emptyIsUndefined
-            />
-            <SelectField
-              name="configuration.timezone"
-              label="timezone"
-              definitionKey="unit.timezone"
-              // @ts-ignore
-              emptyIsUndefined
-              isDisabled={!editing}
-              options={[
-                { value: '', label: t('common.none') },
-                {
-                  value: 'UTC-11:00',
-                  label: 'Midway Islands Time (UTC-11:00)',
-                },
-                {
-                  value: 'UTC-10:00',
-                  label: 'Hawaii Standard Time (UTC-10:00)',
-                },
-                {
-                  value: 'UTC-8:00',
-                  label: 'Pacific Standard Time (UTC-8:00)',
-                },
-                {
-                  value: 'UTC-7:00',
-                  label: 'Mountain Standard Time (UTC-7:00)',
-                },
-                {
-                  value: 'UTC-6:00',
-                  label: 'Central Standard Time (UTC-6:00)',
-                },
-                {
-                  value: 'UTC-5:00',
-                  label: 'Eastern Standard Time (UTC-5:00)',
-                },
-                {
-                  value: 'UTC-4:00',
-                  label: 'Puerto Rico and US Virgin Islands Time (UTC-4:00)',
-                },
-                {
-                  value: 'UTC-3:30',
-                  label: 'Canada Newfoundland Time (UTC-3:30)',
-                },
-                { value: 'UTC-3:00', label: 'Brazil Eastern Time (UTC-3:00)' },
-                {
-                  value: 'UTC-1:00',
-                  label: 'Central African Time (UTC-1:00)',
-                },
-                {
-                  value: 'UTC',
-                  label: 'Universal Coordinated Time (UTC)',
-                },
-                {
-                  value: 'UTC+1:00',
-                  label: 'European Central Time (UTC+1:00)',
-                },
-                {
-                  value: 'UTC+2:00',
-                  label: 'Eastern European Time (UTC+2:00)',
-                },
-                {
-                  value: 'UTC+2:00',
-                  label: '(Arabic) Egypt Standard Time (UTC+2:00)',
-                },
-                {
-                  value: 'UTC+3:00',
-                  label: 'Eastern African Time (UTC+3:00)',
-                },
-                { value: 'UTC+3:30', label: 'Middle East Time (UTC+3:30)' },
-                { value: 'UTC+4:00', label: 'Near East Time (UTC+4:00)' },
-                {
-                  value: 'UTC+5:00',
-                  label: 'Pakistan Lahore Time (UTC+5:00)',
-                },
-                { value: 'UTC+5:30', label: 'India Standard Time (UTC+5:30)' },
-                {
-                  value: 'UTC+6:00',
-                  label: 'Bangladesh Standard Time (UTC+6:00)',
-                },
-                {
-                  value: 'UTC+7:00',
-                  label: 'Vietnam Standard Time (UTC+7:00)',
-                },
-                { value: 'UTC+8:00', label: 'China Taiwan Time (UTC+8:00)' },
-                { value: 'UTC+9:00', label: 'Japan Standard Time (UTC+9:00)' },
-                {
-                  value: 'UTC+9:30',
-                  label: 'Australia Central Time (UTC+9:30)',
-                },
-                {
-                  value: 'UTC+10:00',
-                  label: 'Australia Eastern Time (UTC+10:00)',
-                },
-                {
-                  value: 'UTC+11:00',
-                  label: 'Solomon Standard Time (UTC+11:00)',
-                },
-                {
-                  value: 'UTC+12:00',
-                  label: 'New Zealand Standard Time (UTC+12:00)',
-                },
-              ]}
-            />
             <ToggleField
               name="configuration.leds-active"
               label="leds-active"
@@ -155,15 +52,41 @@ const Unit = ({ editing }: Props) => {
               isDisabled={!editing}
               isRequired
             />
-            <ToggleField
-              name="configuration.random-password"
-              label="random-password"
-              definitionKey="unit.random-password"
+            <StringField
+              name="configuration.system-password"
+              label="system-password"
+              definitionKey="unit.system-password"
               isDisabled={!editing}
-              isRequired
+              emptyIsUndefined
+            />
+            <NumberField
+              name="configuration.usage-threshold"
+              label="usage-threshold"
+              definitionKey="unit.usage-threshold"
+              isDisabled={!editing}
+              emptyIsUndefined
             />
           </SimpleGrid>
-          <BeaconAdvertisement isEditing={editing} />
+          <Flex align="center" mt={2} mb={2}>
+            <Text fontWeight="bold" mr={2}>
+              multicast
+            </Text>
+            <Switch isChecked={hasMulticast} onChange={toggleMulticast} isDisabled={!editing} />
+          </Flex>
+          {hasMulticast && (
+            <SimpleGrid minChildWidth="300px" spacing="20px" mb={4} w="100%">
+              <ToggleField
+                name="configuration.multicast.igmp-snooping-enable"
+                label="igmp-snooping-enable"
+                isDisabled={!editing}
+              />
+              <ToggleField
+                name="configuration.multicast.querier-enable"
+                label="querier-enable"
+                isDisabled={!editing}
+              />
+            </SimpleGrid>
+          )}
         </Box>
       </CardBody>
     </Card>

@@ -9,7 +9,7 @@ import SectionGeneralCard from '../../../common/components/SectionGeneralCard';
 import Unit from './Unit';
 import { UNIT_SCHEMA } from './unitConstants';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
-import { ConfigurationSection } from '../../../common/types';
+import { ConfigurationSection } from '../types';
 
 interface Props {
   editing: boolean;
@@ -30,7 +30,7 @@ const UnitSection = ({ editing, setSection, sectionInformation, removeSub }: Pro
         }
 
         const newSection = {
-          data: node.values,
+          data: { configuration: node.values.configuration },
           isDirty: node.dirty,
           invalidValues,
         };
@@ -55,7 +55,7 @@ const UnitSection = ({ editing, setSection, sectionInformation, removeSub }: Pro
     <Formik
       key={formKey}
       innerRef={sectionRef}
-      initialValues={{ ...sectionInformation.data, name: 'Unit' }}
+      initialValues={{ name: 'Unit', ...(sectionInformation.data ?? UNIT_SCHEMA(t).cast({})) }}
       validationSchema={UNIT_SCHEMA(t)}
     >
       <>
