@@ -27,7 +27,7 @@ const fileToString = async (file: File): Promise<string | null> =>
     reader.onerror = () => resolve(null);
   });
 
-const configurationSections = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'third-party'];
+const configurationSections = ['globals', 'unit', 'metrics', 'services', 'ethernet', 'interfaces', 'third-party'];
 
 const transformComputedConfigToEditable = (config: any) => {
   const configurations = [];

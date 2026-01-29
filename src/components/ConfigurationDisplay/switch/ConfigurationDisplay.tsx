@@ -131,11 +131,13 @@ const ConfigurationDisplay = ({
                         const inner = JSON.parse(c.configuration) as Record<string, any>;
                         const key = Object.keys(inner)[0];
                         if (key) parsedMatches[key] = inner[key];
-                     } catch(e) {
+                     } catch (e) {
                          // ignore
                      }
                 }
             });
+      } else if (newConf && typeof newConf === 'object') {
+            Object.assign(parsedMatches, newConf);
       }
       setActiveConfigurations([]);
       // Use setTimeout to allow React to unmount components, then call parseConfig

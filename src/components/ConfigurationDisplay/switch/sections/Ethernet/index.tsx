@@ -534,7 +534,9 @@ const EthernetSection = ({ editing, setSection, sectionInformation, removeSub })
       innerRef={sectionRef}
       initialValues={{
         name: 'Ethernet',
-        ...(sectionInformation.data?.configuration ?? ETHERNET_SCHEMA(t).cast({})),
+        configuration: Array.isArray(sectionInformation.data?.configuration)
+          ? sectionInformation.data.configuration
+          : ETHERNET_SCHEMA(t).cast({}).configuration,
       }}
       validationSchema={ETHERNET_SCHEMA(t)}
       onSubmit={() => undefined}
