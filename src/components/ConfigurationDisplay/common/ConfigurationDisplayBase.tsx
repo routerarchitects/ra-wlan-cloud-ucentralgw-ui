@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Center, Spinner, Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import isEqual from 'react-fast-compare';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
   const { t } = useTranslation();
   const { tabIndex, onTabChange, tabsWithNewConfiguration, tabsRemovedConfiguration } = useConfigurationTabs();
   const sectionKeys = useMemo(() => sections.map((s) => s.key), [sections]);
+  const isHydratingRef = useRef(false);
 
   const defaultSectionState = useMemo(() => {
     const base: Record<string, ConfigurationSection> = {};
@@ -35,6 +36,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
 
   const [activeConfigurations, setActiveConfigurations] = useState<string[]>([]);
   const [sectionState, setSectionState] = useState<Record<string, ConfigurationSection>>(defaultSectionState);
+  const [pendingImport, setPendingImport] = useState<Record<string, any> | null>(null);
 
   const parseConfig = useCallback(
     (config: Record<string, any>) => {
@@ -57,13 +59,18 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
   useEffect(() => {
     if (configuration) {
       const currentKeys = Object.keys(configuration);
-      if (!isEqual(currentKeys.sort(), activeConfigurations.sort())) {
+      if (!isEqual([...currentKeys].sort(), [...activeConfigurations].sort())) {
+        isHydratingRef.current = true;
         parseConfig(configuration);
       }
     }
   }, [configuration]);
 
   useEffect(() => {
+    if (isHydratingRef.current) {
+      isHydratingRef.current = false;
+      return;
+    }
     const newConfig: Record<string, any> = {};
     for (const key of activeConfigurations) {
       const value = sectionState[key]?.data?.configuration;
@@ -116,11 +123,17 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
         }
       });
     }
+    isHydratingRef.current = true;
     setActiveConfigurations([]);
-    setTimeout(() => {
-      parseConfig(parsedMatches);
-    }, 200);
+    setPendingImport(parsedMatches);
   };
+
+  useEffect(() => {
+    if (!pendingImport) return;
+    isHydratingRef.current = true;
+    parseConfig(pendingImport);
+    setPendingImport(null);
+  }, [pendingImport, parseConfig]);
 
   const defaultConfiguration = useMemo(() => {
     const defaults: Record<string, { name: string; description: string; weight: number; configuration: object }> = {};
