@@ -17,8 +17,6 @@ import { SaveButton } from 'components/Buttons/SaveButton';
 import { Modal } from 'components/Modals/Modal';
 import { uppercaseFirstLetter } from 'helpers/stringHelper';
 
-const configurationSections = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'third-party'];
-
 // @ts-ignore
 const transformComputedConfigToEditable = (
   config: Record<string, unknown>,
@@ -31,6 +29,7 @@ const transformComputedConfigToEditable = (
       configuration: object;
     }
   >,
+  configurationSections: string[],
 ) => {
   const configurations = [];
 
@@ -68,9 +67,17 @@ type Props = {
   currentConfiguration: Record<string, unknown>;
   setConfig: (newConfig: object) => void;
   isDisabled: boolean;
+  configurationSections: string[];
 };
 
-const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, currentConfiguration, setConfig, isDisabled }: Props) => {
+const ExpertModeButton = ({
+  activeConfigurations,
+  defaultConfiguration,
+  currentConfiguration,
+  setConfig,
+  isDisabled,
+  configurationSections,
+}: Props) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [error, { on, off }] = useBoolean();
@@ -78,7 +85,9 @@ const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, currentC
 
   const saveValue = () => {
     try {
-      const final = JSON.parse(transformComputedConfigToEditable(JSON.parse(tempValue), defaultConfiguration));
+      const final = JSON.parse(
+        transformComputedConfigToEditable(JSON.parse(tempValue), defaultConfiguration, configurationSections),
+      );
 
       if (final) {
         const newVal = final.map((conf: { configuration: object }) => ({
@@ -97,7 +106,7 @@ const ExpertModeButton = ({ activeConfigurations, defaultConfiguration, currentC
     setTempValue(e.target.value);
     try {
       const json = JSON.parse(e.target.value);
-      const res = transformComputedConfigToEditable(json, defaultConfiguration);
+      const res = transformComputedConfigToEditable(json, defaultConfiguration, configurationSections);
       if (res) off();
       else on();
     } catch {

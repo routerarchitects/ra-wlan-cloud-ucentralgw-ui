@@ -14,14 +14,7 @@ interface Props {
 const ViewConfigWarningsModal = ({ warnings, activeConfigurations, isDisabled = false }: Props) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const warningsAmount =
-    (warnings.globals?.length ?? 0) +
-    (warnings.unit?.length ?? 0) +
-    (warnings.metrics?.length ?? 0) +
-    (warnings.services?.length ?? 0) +
-    (warnings.radios?.length ?? 0) +
-    (warnings.interfaces?.length ?? 0) +
-    (warnings['third-party']?.length ?? 0);
+  const warningsAmount = activeConfigurations.reduce((sum, key) => sum + (warnings[key]?.length ?? 0), 0);
 
   return (
     <>
@@ -47,15 +40,7 @@ const ViewConfigWarningsModal = ({ warnings, activeConfigurations, isDisabled = 
       >
         <pre>
           {JSON.stringify(
-            {
-              globals: activeConfigurations.includes('globals') ? warnings.globals : undefined,
-              unit: activeConfigurations.includes('unit') ? warnings.unit : undefined,
-              metrics: activeConfigurations.includes('metrics') ? warnings.metrics : undefined,
-              services: activeConfigurations.includes('services') ? warnings.services : undefined,
-              radios: activeConfigurations.includes('radios') ? warnings.radios : undefined,
-              interfaces: activeConfigurations.includes('interfaces') ? warnings.interfaces : undefined,
-              'third-party': activeConfigurations.includes('third-party') ? warnings['third-party'] : undefined,
-            },
+            Object.fromEntries(activeConfigurations.map((key) => [key, warnings[key]])),
             null,
             2,
           )}

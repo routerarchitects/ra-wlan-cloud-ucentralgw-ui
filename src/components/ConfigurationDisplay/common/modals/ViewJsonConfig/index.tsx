@@ -6,18 +6,7 @@ import { CloseButton } from 'components/Buttons/CloseButton';
 import { Modal } from 'components/Modals/Modal';
 
 interface Props {
-  configurations: {
-    globals?: any;
-    unit?: any;
-    metrics?: any;
-    services?: any;
-    ethernet?: any;
-    radios?: any;
-    interfaces?: {
-      configuration: any[];
-    };
-    'third-party'?: any;
-  };
+  configurations: Record<string, any>;
   activeConfigurations: string[];
   isDisabled?: boolean;
 }
@@ -29,24 +18,11 @@ const ViewJsonConfigModal = ({ configurations, activeConfigurations, isDisabled 
   const configStringToDisplay = () => {
     try {
       const finalConfig: Record<string, any> = {};
-      const configToDisplay = {
-        globals: activeConfigurations.includes('globals') ? configurations.globals : undefined,
-        unit: activeConfigurations.includes('unit') ? configurations.unit : undefined,
-        metrics: activeConfigurations.includes('metrics') ? configurations.metrics : undefined,
-        services: activeConfigurations.includes('services') ? configurations.services : undefined,
-        ethernet: activeConfigurations.includes('ethernet') ? configurations.ethernet : undefined,
-        radios: activeConfigurations.includes('radios') ? configurations.radios : undefined,
-        'third-party': activeConfigurations.includes('third-party') ? configurations['third-party'] : undefined,
-      };
-
-      for (const [key, config] of Object.entries(configToDisplay)) {
-        if (config) {
+      for (const key of activeConfigurations) {
+        const config = configurations[key];
+        if (config && config.configuration !== undefined) {
           finalConfig[key] = config.configuration;
         }
-      }
-      
-      if (activeConfigurations.includes('interfaces') && configurations.interfaces) {
-           finalConfig['interfaces'] = configurations.interfaces.configuration;
       }
 
       return JSON.stringify(finalConfig, null, 2);

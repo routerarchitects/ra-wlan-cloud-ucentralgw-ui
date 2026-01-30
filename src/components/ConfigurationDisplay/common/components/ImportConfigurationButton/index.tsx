@@ -2,14 +2,15 @@ import React from 'react';
 import { IconButton, Tooltip, useDisclosure } from '@chakra-ui/react';
 import { UploadSimple } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
-import ImportConfigurationModal from './Modal';
+import ImportConfigurationModal from '../ImportConfigurationModal';
 
 interface Props {
   setConfig: (v: any) => void;
   isDisabled: boolean;
+  configurationSections: string[];
 }
 
-const ImportConfigurationButton = ({ setConfig, isDisabled }: Props) => {
+const ImportConfigurationButton = ({ setConfig, isDisabled, configurationSections }: Props) => {
   const { t } = useTranslation();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -25,7 +26,12 @@ const ImportConfigurationButton = ({ setConfig, isDisabled }: Props) => {
           isDisabled={isDisabled}
         />
       </Tooltip>
-      <ImportConfigurationModal isOpen={isOpen} onClose={onClose} setValue={setConfig} />
+      <ImportConfigurationModal
+        isOpen={isOpen}
+        onClose={onClose}
+        setValue={setConfig}
+        configurationSections={configurationSections}
+      />
     </>
   );
 };

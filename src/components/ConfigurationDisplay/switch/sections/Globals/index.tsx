@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { v4 as uuid } from 'uuid';
 import InternalFormAccess from '../../../common/components/InternalFormAccess';
 import SectionGeneralCard from '../../../common/components/SectionGeneralCard';
-import Globals from './Globals';
+import Globals from '../../../common/sections/Globals/Globals';
 import { GLOBALS_SCHEMA } from './globalsConstants';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
 import { ConfigurationSection } from '../../../common/types';

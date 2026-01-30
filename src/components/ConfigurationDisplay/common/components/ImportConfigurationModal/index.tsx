@@ -27,9 +27,7 @@ const fileToString = async (file: File): Promise<string | null> =>
     reader.onerror = () => resolve(null);
   });
 
-const configurationSections = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'third-party'];
-
-const transformComputedConfigToEditable = (config: any) => {
+const transformComputedConfigToEditable = (config: any, configurationSections: string[]) => {
   const configurations = [];
 
   try {
@@ -57,9 +55,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   setValue: (value: any) => void;
+  configurationSections: string[];
 }
 
-const ImportConfigurationModal = ({ isOpen, onClose, setValue }: Props) => {
+const ImportConfigurationModal = ({ isOpen, onClose, setValue, configurationSections }: Props) => {
   const { t } = useTranslation();
   const [tempValue, setTempValue] = useState('');
   const [refreshId, setRefreshId] = useState('');
@@ -67,7 +66,7 @@ const ImportConfigurationModal = ({ isOpen, onClose, setValue }: Props) => {
 
   const saveValue = () => {
     try {
-      const final = JSON.parse(transformComputedConfigToEditable(JSON.parse(tempValue)));
+      const final = JSON.parse(transformComputedConfigToEditable(JSON.parse(tempValue), configurationSections));
       if (final) {
         const newVal = final.map((conf: any) => ({
           ...conf,
@@ -88,7 +87,7 @@ const ImportConfigurationModal = ({ isOpen, onClose, setValue }: Props) => {
     else {
       try {
         const res = JSON.parse(fileStr);
-        const transformConfig = transformComputedConfigToEditable(res);
+        const transformConfig = transformComputedConfigToEditable(res, configurationSections);
         if (transformConfig) {
           setTempValue(JSON.stringify(res, null, 2));
           off();
@@ -107,7 +106,7 @@ const ImportConfigurationModal = ({ isOpen, onClose, setValue }: Props) => {
     setTempValue(e.target.value);
     try {
       const json = JSON.parse(e.target.value);
-      const res = transformComputedConfigToEditable(json);
+      const res = transformComputedConfigToEditable(json, configurationSections);
       if (res) off();
       else on();
     } catch {
