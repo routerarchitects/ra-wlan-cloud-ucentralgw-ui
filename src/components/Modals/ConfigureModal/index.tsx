@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { PushButton } from '../../Buttons/PushButton';
 import { Modal } from '../Modal';
 import { FileInputButton } from 'components/Buttons/FileInputButton';
-import ConfigurationDisplay from 'components/ConfigurationDisplay';
+import DeviceTypeConfigurationDisplay from 'components/ConfigurationDisplay/DeviceTypeConfigurationDisplay';
 import { useConfigureDevice } from 'hooks/Network/Commands';
 import { useGetDevice } from 'hooks/Network/Devices';
 import { AxiosError } from 'models/Axios';
@@ -171,7 +171,8 @@ const _ConfigureModal = ({ serialNumber, modalProps }: ConfigureModalProps) => {
             </Button>
           </Flex> */}
           {getDevice.data && !getDevice.isFetching ? (
-            <ConfigurationDisplay 
+            <DeviceTypeConfigurationDisplay 
+                deviceType={getDevice.data?.deviceType}
                 configuration={getDevice.data.configuration as Record<string, any>} 
                 onConfigChange={onConfigChange}
                 isLoading={getDevice.isFetching}
