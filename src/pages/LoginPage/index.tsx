@@ -30,10 +30,12 @@ const LoginPage = ({ lightLogo, darkLogo }: LoginPageProps) => {
       <Center display="block" w="100%">
         <Center h="100%" w="100%" mb={0} alignItems="center">
           <Image
-            maxH="700px"
+            maxH={{ base: '200px', md: '300px', lg: '350px' }}
             w="100%"
             maxW="600px"
             mb={0}
+            alt="MangoCloud"
+            objectFit="contain"
             src={colorMode === 'light' ? lightLogo : darkLogo}
           />
         </Center>

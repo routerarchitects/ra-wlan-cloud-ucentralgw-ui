@@ -83,12 +83,13 @@ const Layout = () => {
         logo={
           <img
             src={lightLogo}
-            alt="OpenWifi"
+            alt="MangoCloud"
             width="180px"
-            height="100px"
             style={{
               marginLeft: 'auto',
               marginRight: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
             }}
           />
         }
