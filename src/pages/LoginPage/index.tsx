@@ -26,10 +26,18 @@ const LoginPage = ({ lightLogo, darkLogo }: LoginPageProps) => {
   }, [activeForm.form]);
 
   return (
-    <Box px="5%" h="100vh" display="flex" alignItems="center">
+    <Box px="5%" h="100vh" display="flex" alignItems="center" justifyContent="center">
       <Center display="block" w="100%">
-        <Center h="100%" w="100%" mb={6} alignItems="center">
-          <Image maxH="300px" w="100%" maxW="600px" src={colorMode === 'light' ? lightLogo : darkLogo} />
+        <Center h="100%" w="100%" mb={0} alignItems="center">
+          <Image
+            maxH={{ base: '200px', md: '300px', lg: '350px' }}
+            w="100%"
+            maxW="600px"
+            mb={0}
+            alt="MangoCloud"
+            objectFit="contain"
+            src={colorMode === 'light' ? lightLogo : darkLogo}
+          />
         </Center>
         <Center>
           <Flex

@@ -7,8 +7,7 @@ import SidebarDevices from './Devices';
 import { Navbar } from './Navbar';
 import { PageContainer } from './PageContainer';
 import { Sidebar } from './Sidebar';
-import darkLogo from 'assets/Logo_Dark_Mode.svg';
-import lightLogo from 'assets/Logo_Light_Mode.svg';
+import lightLogo from 'assets/mango-cloud.png';
 import LanguageSwitcher from 'components/LanguageSwitcher';
 import { RouteName } from 'models/Routes';
 import NotFoundPage from 'pages/NotFound';
@@ -83,13 +82,14 @@ const Layout = () => {
         version={__APP_VERSION__}
         logo={
           <img
-            src={colorMode === 'light' ? lightLogo : darkLogo}
-            alt="OpenWifi"
+            src={lightLogo}
+            alt="MangoCloud"
             width="180px"
-            height="100px"
             style={{
               marginLeft: 'auto',
               marginRight: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
             }}
           />
         }
