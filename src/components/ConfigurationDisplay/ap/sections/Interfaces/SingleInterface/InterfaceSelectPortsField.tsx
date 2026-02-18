@@ -111,7 +111,7 @@ const tableCols = [
     Header: 'Reverse Path',
     Footer: '',
     accessor: 'reverse-path',
-    Cell: ({ cell }) => boolOrUndefined(false, cell.row.original.learning),
+    Cell: ({ cell }) => boolOrUndefined(false, cell.row.original['reverse-path']),
   },
   {
     id: 'vlan-tag',
