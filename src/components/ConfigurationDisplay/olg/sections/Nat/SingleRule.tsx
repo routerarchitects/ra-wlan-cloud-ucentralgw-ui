@@ -17,7 +17,7 @@ const propTypes = {
 };
 
 const SingleRule = ({ editing, index, remove, mode }) => {
-  const removeRule = () => remove(index);
+  const removeRule = () => remove();
   const basePath = `configuration.${mode}.rules[${index}]`;
   const interfaceKey = mode === 'dnat' ? 'in-interface' : 'out-interface';
   const { value } = useFastField({ name: basePath });

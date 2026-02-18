@@ -43,7 +43,7 @@ const Nat = ({ editing, rules, onRemoveRule }) => {
   const handleRemove = useCallback(
     (visibleIndex, mode, index) => {
       onRemoveRule(mode, index);
-      if (visibleIndex > 0) setTabIndex(0);
+      setTabIndex(Math.max(0, visibleIndex - 1));
     },
     [onRemoveRule],
   );
