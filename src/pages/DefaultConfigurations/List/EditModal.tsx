@@ -126,6 +126,7 @@ const EditDefaultConfiguration = ({ modalProps, config }: Props) => {
                     options={[
                       { label: 'AP', value: 'ap' },
                       { label: 'Switch', value: 'switch' },
+                      { label: 'OLG', value: 'olg' },
                     ]}
                     isRequired
                     isDisabled
