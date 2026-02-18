@@ -83,7 +83,7 @@ const DeviceListCard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [serialNumber, setSerialNumber] = React.useState<string>('');
-  const [platform, setPlatform] = React.useState<DevicePlatform>('ALL');
+  const [platform, setPlatform] = React.useState<DevicePlatform>('all');
   const scanModalProps = useDisclosure();
   const resetModalProps = useDisclosure();
   const upgradeModalProps = useDisclosure();
@@ -735,9 +735,10 @@ const DeviceListCard = () => {
                 onChange={(e) => setPlatform(e.target.value as DevicePlatform)}
                 w="max-content"
               >
-                <option value="ALL">All</option>
+                <option value="all">All</option>
                 <option value="ap">APs</option>
                 <option value="switch">Switches</option>
+                <option value="olg">OLG</option>
               </Select>
             </>
           ),
