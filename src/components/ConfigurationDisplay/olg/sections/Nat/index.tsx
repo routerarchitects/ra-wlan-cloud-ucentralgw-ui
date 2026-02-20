@@ -151,6 +151,7 @@ const NatSection = ({ editing, setSection, sectionInformation, removeSub, allSec
                   rules={combinedRules}
                   onRemoveRule={onRemoveRule}
                   interfaceNameOptions={interfaceNameOptions}
+                  hasSectionContext={Boolean(allSections)}
                 />
               </SimpleGrid>
             </VStack>

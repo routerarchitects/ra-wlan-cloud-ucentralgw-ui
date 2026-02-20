@@ -20,9 +20,10 @@ const propTypes = {
       value: PropTypes.string.isRequired,
     }),
   ),
+  hasSectionContext: PropTypes.bool,
 };
 
-const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions }) => {
+const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSectionContext }) => {
   const isSnat = mode === 'snat';
   const removeRule = () => remove();
   const basePath = `configuration.${mode}.rules[${index}]`;
@@ -59,7 +60,7 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions }) => {
     if (hasRule && !value?.translation) {
       setFieldValue(`${basePath}.translation`, { address: '' });
     }
-  }, [basePath, interfaceKey, isSnat, setFieldValue, value]);
+  }, [basePath, interfaceKey, setFieldValue, value]);
 
   const onToggleInterface = (checked) => {
     setShowInterface(checked);
@@ -117,7 +118,7 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions }) => {
             {availableInterfaceOptions.length === 0 && (
               <Alert status="warning" variant="left-accent" mt={2}>
                 <AlertIcon />
-                <AlertDescription>Interface objects are not created yet.</AlertDescription>
+                <AlertDescription>{hasSectionContext ? 'Interface objects are not created yet.' : 'Interface section context is unavailable.'}</AlertDescription>
               </Alert>
             )}
             <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
@@ -220,6 +221,7 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions }) => {
 SingleRule.propTypes = propTypes;
 SingleRule.defaultProps = {
   interfaceNameOptions: [],
+  hasSectionContext: false,
 };
 
 export default React.memo(SingleRule);
