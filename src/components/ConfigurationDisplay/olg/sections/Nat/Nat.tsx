@@ -20,9 +20,15 @@ const propTypes = {
     }),
   ).isRequired,
   onRemoveRule: PropTypes.func.isRequired,
+  interfaceNameOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
-const Nat = ({ editing, rules, onRemoveRule }) => {
+const Nat = ({ editing, rules, onRemoveRule, interfaceNameOptions }) => {
   const [tabIndex, setTabIndex] = useState(0);
 
   useEffect(() => {
@@ -76,6 +82,7 @@ const Nat = ({ editing, rules, onRemoveRule }) => {
                     editing={editing}
                     index={entry.index}
                     mode={entry.mode}
+                    interfaceNameOptions={interfaceNameOptions}
                     remove={() => handleRemove(visibleIndex, entry.mode, entry.index)}
                   />
                 </TabPanel>
@@ -89,5 +96,8 @@ const Nat = ({ editing, rules, onRemoveRule }) => {
 };
 
 Nat.propTypes = propTypes;
+Nat.defaultProps = {
+  interfaceNameOptions: [],
+};
 
 export default React.memo(Nat);

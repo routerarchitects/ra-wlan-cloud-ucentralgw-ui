@@ -49,7 +49,7 @@ const CreateRuleButton = ({ editing, setTabIndex }: Props) => {
             'rule-id': ruleId,
             'out-interface': { name: '' },
             source: { address: '' },
-            translation: { address: 'masquerade' },
+            translation: { address: '' },
           });
 
     setFieldValue(`configuration.${normalizedType}.rules`, [...existingRules, newRule]);

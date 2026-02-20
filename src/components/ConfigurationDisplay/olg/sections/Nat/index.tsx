@@ -16,6 +16,7 @@ interface Props {
   setSection: (section: ConfigurationSection) => void;
   sectionInformation: ConfigurationSection;
   removeSub: (sub: string) => void;
+  allSections?: Record<string, ConfigurationSection>;
 }
 
 const stripEmptyValues = (input: any): any => {
@@ -41,7 +42,7 @@ const sanitizeRules = (rules: any[]) =>
     .map((rule) => stripEmptyValues(rule))
     .filter((rule) => rule && typeof rule === 'object' && Object.keys(rule).length > 0);
 
-const NatSection = ({ editing, setSection, sectionInformation, removeSub }: Props) => {
+const NatSection = ({ editing, setSection, sectionInformation, removeSub, allSections }: Props) => {
   const { t } = useTranslation();
   const [formKey, setFormKey] = useState(uuid());
 
@@ -57,6 +58,22 @@ const NatSection = ({ editing, setSection, sectionInformation, removeSub }: Prop
 
     return DEFAULT_NAT_CONFIGURATION;
   }, [sectionInformation.data]);
+
+  const interfaceNameOptions = useMemo(() => {
+    const interfaceEntries = allSections?.interfaces?.data?.configuration;
+    if (!Array.isArray(interfaceEntries)) return [];
+
+    const seen = new Set<string>();
+    return interfaceEntries
+      .map((entry: any) => entry?.name)
+      .filter((name: unknown): name is string => typeof name === 'string' && name.trim() !== '')
+      .filter((name: string) => {
+        if (seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      })
+      .map((name: string) => ({ label: name, value: name }));
+  }, [allSections?.interfaces?.data?.configuration]);
 
   const sectionRef = useCallback(
     (node: any) => {
@@ -129,7 +146,12 @@ const NatSection = ({ editing, setSection, sectionInformation, removeSub }: Prop
               <SectionGeneralCard editing={editing} buttons={<DeleteButton onClick={removeNat} isDisabled={!editing} />} />
 
               <SimpleGrid minChildWidth="400px" spacing={4} w="100%">
-                <Nat editing={editing} rules={combinedRules} onRemoveRule={onRemoveRule} />
+                <Nat
+                  editing={editing}
+                  rules={combinedRules}
+                  onRemoveRule={onRemoveRule}
+                  interfaceNameOptions={interfaceNameOptions}
+                />
               </SimpleGrid>
             </VStack>
           </>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading, SimpleGrid, Spacer, Switch } from '@chakra-ui/react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Alert, AlertDescription, AlertIcon, Box, Flex, Heading, SimpleGrid, Spacer, Switch } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useFormikContext } from 'formik';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
@@ -14,74 +14,52 @@ const propTypes = {
   index: PropTypes.number.isRequired,
   remove: PropTypes.func.isRequired,
   mode: PropTypes.oneOf(['snat', 'dnat']).isRequired,
+  interfaceNameOptions: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string.isRequired,
+      value: PropTypes.string.isRequired,
+    }),
+  ),
 };
 
-const SingleRule = ({ editing, index, remove, mode }) => {
+const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions }) => {
+  const isSnat = mode === 'snat';
   const removeRule = () => remove();
   const basePath = `configuration.${mode}.rules[${index}]`;
   const interfaceKey = mode === 'dnat' ? 'in-interface' : 'out-interface';
   const { value } = useFastField({ name: basePath });
   const { setFieldValue } = useFormikContext();
+
+  const currentInterfaceName = value?.[interfaceKey]?.name;
+  const availableInterfaceOptions = useMemo(() => {
+    if (!currentInterfaceName || interfaceNameOptions.some((option) => option.value === currentInterfaceName)) {
+      return interfaceNameOptions;
+    }
+    return [{ label: currentInterfaceName, value: currentInterfaceName }, ...interfaceNameOptions];
+  }, [currentInterfaceName, interfaceNameOptions]);
+
   const [showInterface, setShowInterface] = useState(false);
   const [showSource, setShowSource] = useState(false);
-  const [showSourceGroup, setShowSourceGroup] = useState(false);
   const [showDestination, setShowDestination] = useState(false);
-  const [showDestinationGroup, setShowDestinationGroup] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
-  const [showTranslationRedirect, setShowTranslationRedirect] = useState(false);
-  const [showTranslationOptions, setShowTranslationOptions] = useState(false);
 
   useEffect(() => {
-    setShowInterface(Boolean(value?.[interfaceKey]));
-    setShowSource(
-      Boolean(
-        value?.source ||
-        value?.source?.address ||
-          value?.source?.port ||
-          value?.source?.fqdn ||
-          value?.source?.group?.['port-group'] ||
-          value?.source?.group?.['network-group'] ||
-          value?.source?.group?.['mac-group'] ||
-          value?.source?.group?.['domain-group'] ||
-          value?.source?.group?.['address-group'],
-      ),
-    );
-    setShowSourceGroup(
-      Boolean(
-        value?.source?.group?.['port-group'] ||
-          value?.source?.group?.['network-group'] ||
-          value?.source?.group?.['mac-group'] ||
-          value?.source?.group?.['domain-group'] ||
-          value?.source?.group?.['address-group'],
-      ),
-    );
-    setShowDestination(
-      Boolean(
-        value?.destination?.address ||
-          value?.destination?.port ||
-          value?.destination?.fqdn ||
-          value?.destination?.group?.['port-group'] ||
-          value?.destination?.group?.['network-group'] ||
-          value?.destination?.group?.['mac-group'] ||
-          value?.destination?.group?.['domain-group'] ||
-          value?.destination?.group?.['address-group'],
-      ),
-    );
-    setShowDestinationGroup(
-      Boolean(
-        value?.destination?.group?.['port-group'] ||
-          value?.destination?.group?.['network-group'] ||
-          value?.destination?.group?.['mac-group'] ||
-          value?.destination?.group?.['domain-group'] ||
-          value?.destination?.group?.['address-group'],
-      ),
-    );
-    setShowTranslation(Boolean(value?.translation));
-    setShowTranslationRedirect(Boolean(value?.translation?.redirect?.port));
-    setShowTranslationOptions(
-      Boolean(value?.translation?.options?.['port-mapping'] || value?.translation?.options?.['address-mapping']),
-    );
-  }, [interfaceKey, value]);
+    const hasRule = Boolean(value && typeof value === 'object');
+    const hasInterface = Boolean(value?.[interfaceKey]);
+    const hasTranslation = Boolean(value?.translation);
+
+    setShowInterface(hasRule ? true : hasInterface);
+    setShowSource(Boolean(value?.source?.address || value?.source?.port));
+    setShowDestination(Boolean(value?.destination?.address || value?.destination?.port));
+    setShowTranslation(hasRule ? true : hasTranslation);
+
+    if (hasRule && !value?.[interfaceKey]) {
+      setFieldValue(`${basePath}.${interfaceKey}`, { name: '' });
+    }
+    if (hasRule && !value?.translation) {
+      setFieldValue(`${basePath}.translation`, { address: '' });
+    }
+  }, [basePath, interfaceKey, isSnat, setFieldValue, value]);
 
   const onToggleInterface = (checked) => {
     setShowInterface(checked);
@@ -90,47 +68,17 @@ const SingleRule = ({ editing, index, remove, mode }) => {
 
   const onToggleSource = (checked) => {
     setShowSource(checked);
-    if (!checked) {
-      setShowSourceGroup(false);
-      setFieldValue(`${basePath}.source`, undefined);
-    }
-  };
-
-  const onToggleSourceGroup = (checked) => {
-    setShowSourceGroup(checked);
-    if (!checked) setFieldValue(`${basePath}.source.group`, undefined);
+    if (!checked) setFieldValue(`${basePath}.source`, undefined);
   };
 
   const onToggleDestination = (checked) => {
     setShowDestination(checked);
-    if (!checked) {
-      setShowDestinationGroup(false);
-      setFieldValue(`${basePath}.destination`, undefined);
-    }
-  };
-
-  const onToggleDestinationGroup = (checked) => {
-    setShowDestinationGroup(checked);
-    if (!checked) setFieldValue(`${basePath}.destination.group`, undefined);
+    if (!checked) setFieldValue(`${basePath}.destination`, undefined);
   };
 
   const onToggleTranslation = (checked) => {
     setShowTranslation(checked);
-    if (!checked) {
-      setShowTranslationRedirect(false);
-      setShowTranslationOptions(false);
-      setFieldValue(`${basePath}.translation`, undefined);
-    }
-  };
-
-  const onToggleTranslationRedirect = (checked) => {
-    setShowTranslationRedirect(checked);
-    if (!checked) setFieldValue(`${basePath}.translation.redirect`, undefined);
-  };
-
-  const onToggleTranslationOptions = (checked) => {
-    setShowTranslationOptions(checked);
-    if (!checked) setFieldValue(`${basePath}.translation.options`, undefined);
+    if (!checked) setFieldValue(`${basePath}.translation`, undefined);
   };
 
   return (
@@ -165,138 +113,75 @@ const SingleRule = ({ editing, index, remove, mode }) => {
           <Switch isChecked={showInterface} onChange={(e) => onToggleInterface(e.target.checked)} isDisabled={!editing} />
         </Flex>
         {showInterface && (
+          <>
+            {availableInterfaceOptions.length === 0 && (
+              <Alert status="warning" variant="left-accent" mt={2}>
+                <AlertIcon />
+                <AlertDescription>Interface objects are not created yet.</AlertDescription>
+              </Alert>
+            )}
+            <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
+              <SelectField
+                name={`${basePath}.${interfaceKey}.name`}
+                label="name"
+                isDisabled={!editing}
+                isRequired
+                options={availableInterfaceOptions}
+              />
+            </SimpleGrid>
+          </>
+        )}
+      </Box>
+
+      <Box mt={4} w="100%">
+        <Flex alignItems="center" gap={3}>
+          <Heading size="xs">source</Heading>
+          <Switch isChecked={showSource} onChange={(e) => onToggleSource(e.target.checked)} isDisabled={!editing} />
+        </Flex>
+        {showSource && (
           <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
             <StringField
-              name={`${basePath}.${interfaceKey}.name`}
-              label="name"
+              name={`${basePath}.source.address`}
+              label="address"
               isDisabled={!editing}
-              isRequired
+              placeholder="Example: 192.168.1.10"
               emptyIsUndefined
             />
-            <StringField name={`${basePath}.${interfaceKey}.group`} label="group" isDisabled={!editing} emptyIsUndefined />
+            <NumberField
+              name={`${basePath}.source.port`}
+              label="port"
+              isDisabled={!editing}
+              min={1}
+              max={65535}
+              acceptEmptyValue
+            />
           </SimpleGrid>
         )}
       </Box>
 
       <Box mt={4} w="100%">
         <Flex alignItems="center" gap={3}>
-          <Heading size="xs">source <Box as="span" color="red.300">*</Box></Heading>
-          <Switch isChecked={showSource} onChange={(e) => onToggleSource(e.target.checked)} isDisabled={!editing} />
-        </Flex>
-        {showSource && (
-          <>
-            <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-              <StringField
-                name={`${basePath}.source.address`}
-                label="address"
-                isDisabled={!editing}
-                isRequired
-                emptyIsUndefined
-              />
-              <StringField name={`${basePath}.source.port`} label="port" isDisabled={!editing} emptyIsUndefined />
-              <StringField name={`${basePath}.source.fqdn`} label="fqdn" isDisabled={!editing} emptyIsUndefined />
-            </SimpleGrid>
-
-            <Box mt={3} w="100%">
-              <Flex alignItems="center" gap={3}>
-                <Heading size="xs">source-group</Heading>
-                <Switch
-                  isChecked={showSourceGroup}
-                  onChange={(e) => onToggleSourceGroup(e.target.checked)}
-                  isDisabled={!editing}
-                />
-              </Flex>
-              {showSourceGroup && (
-                <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-                  <StringField name={`${basePath}.source.group.port-group`} label="port-group" isDisabled={!editing} emptyIsUndefined />
-                  <StringField
-                    name={`${basePath}.source.group.network-group`}
-                    label="network-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField name={`${basePath}.source.group.mac-group`} label="mac-group" isDisabled={!editing} emptyIsUndefined />
-                  <StringField
-                    name={`${basePath}.source.group.domain-group`}
-                    label="domain-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField
-                    name={`${basePath}.source.group.address-group`}
-                    label="address-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                </SimpleGrid>
-              )}
-            </Box>
-          </>
-        )}
-      </Box>
-
-      <Box mt={4} w="100%">
-        <Flex alignItems="center" gap={3}>
           <Heading size="xs">destination</Heading>
-          <Switch
-            isChecked={showDestination}
-            onChange={(e) => onToggleDestination(e.target.checked)}
-            isDisabled={!editing}
-          />
+          <Switch isChecked={showDestination} onChange={(e) => onToggleDestination(e.target.checked)} isDisabled={!editing} />
         </Flex>
         {showDestination && (
-          <>
-            <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-              <StringField name={`${basePath}.destination.address`} label="address" isDisabled={!editing} emptyIsUndefined />
-              <StringField name={`${basePath}.destination.port`} label="port" isDisabled={!editing} emptyIsUndefined />
-              <StringField name={`${basePath}.destination.fqdn`} label="fqdn" isDisabled={!editing} emptyIsUndefined />
-            </SimpleGrid>
-
-            <Box mt={3} w="100%">
-              <Flex alignItems="center" gap={3}>
-                <Heading size="xs">destination-group</Heading>
-                <Switch
-                  isChecked={showDestinationGroup}
-                  onChange={(e) => onToggleDestinationGroup(e.target.checked)}
-                  isDisabled={!editing}
-                />
-              </Flex>
-              {showDestinationGroup && (
-                <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-                  <StringField
-                    name={`${basePath}.destination.group.port-group`}
-                    label="port-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField
-                    name={`${basePath}.destination.group.network-group`}
-                    label="network-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField
-                    name={`${basePath}.destination.group.mac-group`}
-                    label="mac-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField
-                    name={`${basePath}.destination.group.domain-group`}
-                    label="domain-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                  <StringField
-                    name={`${basePath}.destination.group.address-group`}
-                    label="address-group"
-                    isDisabled={!editing}
-                    emptyIsUndefined
-                  />
-                </SimpleGrid>
-              )}
-            </Box>
-          </>
+          <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
+            <StringField
+              name={`${basePath}.destination.address`}
+              label="address"
+              isDisabled={!editing}
+              placeholder="Example: 192.168.1.10"
+              emptyIsUndefined
+            />
+            <NumberField
+              name={`${basePath}.destination.port`}
+              label="port"
+              isDisabled={!editing}
+              min={1}
+              max={65535}
+              acceptEmptyValue
+            />
+          </SimpleGrid>
         )}
       </Box>
 
@@ -305,92 +190,27 @@ const SingleRule = ({ editing, index, remove, mode }) => {
           <Heading size="xs">
             translation <Box as="span" color="red.300">*</Box>
           </Heading>
-          <Switch
-            isChecked={showTranslation}
-            onChange={(e) => onToggleTranslation(e.target.checked)}
-            isDisabled={!editing}
-          />
+          <Switch isChecked={showTranslation} onChange={(e) => onToggleTranslation(e.target.checked)} isDisabled={!editing} />
         </Flex>
         {showTranslation && (
-          <>
-            <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-              <StringField
-                name={`${basePath}.translation.address`}
-                label="address"
-                isDisabled={!editing}
-                isRequired
-                emptyIsUndefined
-              />
-              {mode === 'dnat' ? (
-                <StringField name={`${basePath}.translation.port`} label="port" isDisabled={!editing} emptyIsUndefined />
-              ) : (
-                <NumberField
-                  name={`${basePath}.translation.port`}
-                  label="port"
-                  isDisabled={!editing}
-                  min={1}
-                  max={65535}
-                  acceptEmptyValue
-                />
-              )}
-            </SimpleGrid>
-
-            {mode === 'dnat' && (
-              <Box mt={3} w="100%">
-                <Flex alignItems="center" gap={3}>
-                  <Heading size="xs">redirect</Heading>
-                  <Switch
-                    isChecked={showTranslationRedirect}
-                    onChange={(e) => onToggleTranslationRedirect(e.target.checked)}
-                    isDisabled={!editing}
-                  />
-                </Flex>
-                {showTranslationRedirect && (
-                  <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-                    <StringField
-                      name={`${basePath}.translation.redirect.port`}
-                      label="port"
-                      isDisabled={!editing}
-                      emptyIsUndefined
-                    />
-                  </SimpleGrid>
-                )}
-              </Box>
-            )}
-
-            <Box mt={3} w="100%">
-              <Flex alignItems="center" gap={3}>
-                <Heading size="xs">options</Heading>
-                <Switch
-                  isChecked={showTranslationOptions}
-                  onChange={(e) => onToggleTranslationOptions(e.target.checked)}
-                  isDisabled={!editing}
-                />
-              </Flex>
-              {showTranslationOptions && (
-                <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-                  <SelectField
-                    name={`${basePath}.translation.options.port-mapping`}
-                    label="port-mapping"
-                    isDisabled={!editing}
-                    options={[
-                      { value: 'none', label: 'none' },
-                      { value: 'random', label: 'random' },
-                    ]}
-                  />
-                  <SelectField
-                    name={`${basePath}.translation.options.address-mapping`}
-                    label="address-mapping"
-                    isDisabled={!editing}
-                    options={[
-                      { value: 'random', label: 'random' },
-                      { value: 'none', label: 'none' },
-                    ]}
-                  />
-                </SimpleGrid>
-              )}
-            </Box>
-          </>
+          <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
+            <StringField
+              name={`${basePath}.translation.address`}
+              label="address"
+              isDisabled={!editing}
+              isRequired
+              placeholder="Example: 192.168.1.10"
+              emptyIsUndefined
+            />
+            <NumberField
+              name={`${basePath}.translation.port`}
+              label="port"
+              isDisabled={!editing}
+              min={1}
+              max={65535}
+              acceptEmptyValue
+            />
+          </SimpleGrid>
         )}
       </Box>
     </>
@@ -398,5 +218,8 @@ const SingleRule = ({ editing, index, remove, mode }) => {
 };
 
 SingleRule.propTypes = propTypes;
+SingleRule.defaultProps = {
+  interfaceNameOptions: [],
+};
 
 export default React.memo(SingleRule);

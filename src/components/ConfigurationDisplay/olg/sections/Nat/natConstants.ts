@@ -19,23 +19,24 @@ const GROUP_SCHEMA = object()
   })
   .default(undefined);
 
+const PORT_SCHEMA = number().moreThan(0).lessThan(65536).integer().default(undefined);
+
 const BASE_RULE_SHAPE = (t: (k: string) => string) => ({
   'rule-id': number().required(t('form.required')).min(1, t('form.required')).integer().default(1),
   disable: bool().default(undefined),
   protocol: string().oneOf(['all', 'tcp', 'udp']).default(undefined),
   source: object()
     .shape({
-      address: string().required(t('form.required')).default(''),
-      port: string().default(undefined),
+      address: string().default(undefined),
+      port: PORT_SCHEMA,
       fqdn: string().default(undefined),
       group: GROUP_SCHEMA,
     })
-    .required(t('form.required'))
-    .default({ address: '' }),
+    .default(undefined),
   destination: object()
     .shape({
       address: string().default(undefined),
-      port: string().default(undefined),
+      port: PORT_SCHEMA,
       fqdn: string().default(undefined),
       group: GROUP_SCHEMA,
     })
@@ -54,17 +55,11 @@ export const NAT_RULE_SCHEMA = (t: (k: string) => string, useDefault = false) =>
       .default({ name: '' }),
     translation: object()
       .shape({
-        address: string().required(t('form.required')).default('masquerade'),
-        port: number().moreThan(0).lessThan(65536).integer().default(undefined),
-        options: object()
-          .shape({
-            'port-mapping': string().default('none'),
-            'address-mapping': string().default('random'),
-          })
-          .default(undefined),
+        address: string().required(t('form.required')).default(''),
+        port: PORT_SCHEMA,
       })
       .required(t('form.required'))
-      .default({ address: 'masquerade' }),
+      .default({ address: '' }),
   });
 
   return useDefault ? shape : shape.nullable().default(undefined);
@@ -82,19 +77,8 @@ export const DNAT_RULE_SCHEMA = (t: (k: string) => string, useDefault = false) =
       .default({ name: '' }),
     translation: object()
       .shape({
-        redirect: object()
-          .shape({
-            port: string().default(undefined),
-          })
-          .default(undefined),
         address: string().required(t('form.required')).default(''),
-        port: string().default(undefined),
-        options: object()
-          .shape({
-            'port-mapping': string().default('none'),
-            'address-mapping': string().default('random'),
-          })
-          .default(undefined),
+        port: PORT_SCHEMA,
       })
       .required(t('form.required'))
       .default({ address: '' }),
