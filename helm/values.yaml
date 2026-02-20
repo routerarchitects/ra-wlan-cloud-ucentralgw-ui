@@ -76,3 +76,10 @@ podAnnotations: {}
 # Application
 public_env_variables:
   REACT_APP_UCENTRALSEC_URL: https://ucentral.dpaas.arilia.com:16001
+  REACT_APP_GRAFANA_URL: http://localhost:3000
+  REACT_APP_GRAFANA_DEFAULT_DASHBOARD: /dashboards
+  REACT_APP_GRAFANA_DASHBOARD_CADVISOR: /grafana/d/pMEd7m0Mz/cadvisor-exporter?orgId=1
+  REACT_APP_GRAFANA_DASHBOARD_KAFKA: /grafana/d/jwPKIsniz/kafka-exporter-overview?orgId=1
+  REACT_APP_GRAFANA_DASHBOARD_NODE: /grafana/d/rYdddlPWk/node-exporter-full?orgId=1
+  REACT_APP_GRAFANA_DASHBOARD_POSTGRES: /grafana/d/000000039/postgresql-database?orgId=1
+  REACT_APP_AI_AGENT_URL: https://ai-client.openwifi.local:9001
