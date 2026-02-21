@@ -39,20 +39,14 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSec
     return [{ label: currentInterfaceName, value: currentInterfaceName }, ...interfaceNameOptions];
   }, [currentInterfaceName, interfaceNameOptions]);
 
-  const [showInterface, setShowInterface] = useState(false);
   const [showSource, setShowSource] = useState(false);
   const [showDestination, setShowDestination] = useState(false);
-  const [showTranslation, setShowTranslation] = useState(false);
 
   useEffect(() => {
     const hasRule = Boolean(value && typeof value === 'object');
-    const hasInterface = Boolean(value?.[interfaceKey]);
-    const hasTranslation = Boolean(value?.translation);
 
-    setShowInterface(hasRule ? true : hasInterface);
     setShowSource(Boolean(value?.source?.address || value?.source?.port));
     setShowDestination(Boolean(value?.destination?.address || value?.destination?.port));
-    setShowTranslation(hasRule ? true : hasTranslation);
 
     if (hasRule && !value?.[interfaceKey]) {
       setFieldValue(`${basePath}.${interfaceKey}`, { name: '' });
@@ -62,10 +56,11 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSec
     }
   }, [basePath, interfaceKey, setFieldValue, value]);
 
-  const onToggleInterface = (checked) => {
-    setShowInterface(checked);
-    if (!checked) setFieldValue(`${basePath}.${interfaceKey}`, undefined);
-  };
+  useEffect(() => {
+    if (!value?.[interfaceKey]?.name && availableInterfaceOptions.length > 0) {
+      setFieldValue(`${basePath}.${interfaceKey}.name`, availableInterfaceOptions[0].value);
+    }
+  }, [availableInterfaceOptions, value, interfaceKey, basePath, setFieldValue]);
 
   const onToggleSource = (checked) => {
     setShowSource(checked);
@@ -75,11 +70,6 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSec
   const onToggleDestination = (checked) => {
     setShowDestination(checked);
     if (!checked) setFieldValue(`${basePath}.destination`, undefined);
-  };
-
-  const onToggleTranslation = (checked) => {
-    setShowTranslation(checked);
-    if (!checked) setFieldValue(`${basePath}.translation`, undefined);
   };
 
   return (
@@ -107,31 +97,26 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSec
       </SimpleGrid>
 
       <Box mt={4} w="100%">
-        <Flex alignItems="center" gap={3}>
-          <Heading size="xs">
-            {interfaceKey} <Box as="span" color="red.300">*</Box>
-          </Heading>
-          <Switch isChecked={showInterface} onChange={(e) => onToggleInterface(e.target.checked)} isDisabled={!editing} />
-        </Flex>
-        {showInterface && (
-          <>
-            {availableInterfaceOptions.length === 0 && (
-              <Alert status="warning" variant="left-accent" mt={2}>
-                <AlertIcon />
-                <AlertDescription>{hasSectionContext ? 'Interface objects are not created yet.' : 'Interface section context is unavailable.'}</AlertDescription>
-              </Alert>
-            )}
-            <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-              <SelectField
-                name={`${basePath}.${interfaceKey}.name`}
-                label="name"
-                isDisabled={!editing}
-                isRequired
-                options={availableInterfaceOptions}
-              />
-            </SimpleGrid>
-          </>
+        <Heading size="xs">
+          interface <Box as="span" color="red.300">*</Box>
+        </Heading>
+        {availableInterfaceOptions.length === 0 && (
+          <Alert status="warning" variant="left-accent" mt={2}>
+            <AlertIcon />
+            <AlertDescription>
+              {hasSectionContext ? 'Interface objects are not created yet.' : 'Interface section context is unavailable.'}
+            </AlertDescription>
+          </Alert>
         )}
+        <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
+          <SelectField
+            name={`${basePath}.${interfaceKey}.name`}
+            label="interface"
+            isDisabled={!editing}
+            isRequired
+            options={availableInterfaceOptions}
+          />
+        </SimpleGrid>
       </Box>
 
       <Box mt={4} w="100%">
@@ -187,32 +172,27 @@ const SingleRule = ({ editing, index, remove, mode, interfaceNameOptions, hasSec
       </Box>
 
       <Box mt={4} w="100%">
-        <Flex alignItems="center" gap={3}>
-          <Heading size="xs">
-            translation <Box as="span" color="red.300">*</Box>
-          </Heading>
-          <Switch isChecked={showTranslation} onChange={(e) => onToggleTranslation(e.target.checked)} isDisabled={!editing} />
-        </Flex>
-        {showTranslation && (
-          <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
-            <StringField
-              name={`${basePath}.translation.address`}
-              label="address"
-              isDisabled={!editing}
-              isRequired
-              placeholder="Example: 192.168.1.10"
-              emptyIsUndefined
-            />
-            <NumberField
-              name={`${basePath}.translation.port`}
-              label="port"
-              isDisabled={!editing}
-              min={1}
-              max={65535}
-              acceptEmptyValue
-            />
-          </SimpleGrid>
-        )}
+        <Heading size="xs">
+          translation <Box as="span" color="red.300">*</Box>
+        </Heading>
+        <SimpleGrid minChildWidth="300px" spacing="20px" mt={2} w="100%">
+          <StringField
+            name={`${basePath}.translation.address`}
+            label="translation-address"
+            isDisabled={!editing}
+            isRequired
+            placeholder={isSnat ? 'Example: masquerade or 192.168.1.10' : 'Example: 192.168.1.10'}
+            emptyIsUndefined
+          />
+          <NumberField
+            name={`${basePath}.translation.port`}
+            label="translation-port"
+            isDisabled={!editing}
+            min={1}
+            max={65535}
+            acceptEmptyValue
+          />
+        </SimpleGrid>
       </Box>
     </>
   );
