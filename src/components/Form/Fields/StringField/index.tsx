@@ -6,6 +6,7 @@ import { FieldProps } from 'models/Form';
 
 export interface StringFieldProps extends FieldProps, LayoutProps {
   hideButton?: boolean;
+  placeholder?: string;
 }
 
 const _StringField: React.FC<StringFieldProps> = ({
@@ -18,6 +19,7 @@ const _StringField: React.FC<StringFieldProps> = ({
   isArea = false,
   emptyIsUndefined = false,
   definitionKey,
+  placeholder,
   ...props
 }) => {
   const { value, error, isError, onChange, onBlur } = useFastField<string | undefined>({ name });
@@ -44,6 +46,7 @@ const _StringField: React.FC<StringFieldProps> = ({
       isArea={isArea}
       isDisabled={isDisabled}
       definitionKey={definitionKey}
+      placeholder={placeholder}
       {...props}
     />
   );

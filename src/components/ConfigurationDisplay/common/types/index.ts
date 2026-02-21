@@ -26,6 +26,7 @@ export type SectionComponentProps = {
     setSection: (section: ConfigurationSection) => void;
     sectionInformation: ConfigurationSection;
     removeSub: (sub: string) => void;
+    allSections?: Record<string, ConfigurationSection>;
 };
 
 export type SectionDef = {

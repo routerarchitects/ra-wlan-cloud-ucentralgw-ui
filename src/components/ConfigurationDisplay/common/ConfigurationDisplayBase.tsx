@@ -217,6 +217,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
                         }
                         sectionInformation={sectionState[section.key]}
                         removeSub={removeSub}
+                        allSections={sectionState}
                       />
                     </TabPanel>
                   ) : null,
