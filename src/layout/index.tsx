@@ -8,7 +8,6 @@ import { Navbar } from './Navbar';
 import { PageContainer } from './PageContainer';
 import { Sidebar } from './Sidebar';
 import lightLogo from 'assets/mango-cloud.png';
-import AiCopilotPanel from 'components/AiCopilotPanel';
 import LanguageSwitcher from 'components/LanguageSwitcher';
 import { RouteName } from 'models/Routes';
 import NotFoundPage from 'pages/NotFound';
@@ -101,7 +100,6 @@ const Layout = () => {
       <PageContainer waitForUser>
         <Routes>{[...routeInstances, <Route path="*" element={<NotFoundPage />} key={uuid()} />]}</Routes>
       </PageContainer>
-      <AiCopilotPanel />
     </>
   );
 };

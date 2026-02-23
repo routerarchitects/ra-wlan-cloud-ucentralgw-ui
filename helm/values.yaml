@@ -82,4 +82,3 @@ public_env_variables:
   REACT_APP_GRAFANA_DASHBOARD_KAFKA: /grafana/d/jwPKIsniz/kafka-exporter-overview?orgId=1
   REACT_APP_GRAFANA_DASHBOARD_NODE: /grafana/d/rYdddlPWk/node-exporter-full?orgId=1
   REACT_APP_GRAFANA_DASHBOARD_POSTGRES: /grafana/d/000000039/postgresql-database?orgId=1
-  REACT_APP_AI_AGENT_URL: https://ai-client.openwifi.local:9001
