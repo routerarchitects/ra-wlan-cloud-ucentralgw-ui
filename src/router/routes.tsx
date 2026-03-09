@@ -21,6 +21,7 @@ const ScriptsPage = React.lazy(() => import('pages/Scripts'));
 const UsersPage = React.lazy(() => import('pages/UsersPage'));
 const MonitoringPage = React.lazy(() => import('pages/MonitoringPage'));
 const EndpointsPage = React.lazy(() => import('pages/EndpointsPage'));
+const GrafanaPage = React.lazy(() => import('pages/GrafanaPage'));
 const SystemConfigurationPage = React.lazy(() => import('pages/SystemConfigurationPage'));
 
 const routes: Route[] = [
@@ -214,6 +215,13 @@ const routes: Route[] = [
         path: '/services',
         name: 'system.services',
         component: EndpointsPage,
+      },
+      {
+        id: 'system-grafana',
+        authorized: ['root', 'partner', 'admin', 'csr', 'system'],
+        path: '/systemGrafana',
+        name: 'Grafana',
+        component: GrafanaPage,
       },
     ],
   },

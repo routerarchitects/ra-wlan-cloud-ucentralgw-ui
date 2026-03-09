@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SimpleGrid, Spacer } from '@chakra-ui/react';
+import { SimpleGrid } from '@chakra-ui/react';
 import { v4 as uuid } from 'uuid';
 import { RefreshButton } from '../../components/Buttons/RefreshButton';
 import SystemTile from './MonitoringSystemCard';
@@ -42,7 +42,6 @@ const MonitoringPage = ({ isOnlySec }: MonitoringPageProps) => {
     <>
       <Card mb="20px">
         <CardHeader variant="unstyled" px={4} py={2}>
-          <Spacer />
           <RefreshButton onClick={refetch} isFetching={isFetching} />
         </CardHeader>
       </Card>
