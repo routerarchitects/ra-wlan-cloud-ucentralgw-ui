@@ -89,7 +89,7 @@ export const Sidebar = ({ routes, isOpen, toggle, logo, version, topNav, childre
         </Box>
       </>
     ),
-    [user?.userRole, location, topNav],
+    [routes, user?.userRole, location, topNav, t, toggle],
   );
 
   return (

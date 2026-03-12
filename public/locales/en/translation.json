@@ -341,6 +341,14 @@
     "yes": "Yes",
     "your_new_note": "Your new note"
   },
+  "grafana": {
+    "embed_failed_description": "{{dashboard}} could not be shown inside the app. This usually happens when Grafana embedding is blocked or the dashboard URL cannot be loaded.",
+    "embed_failed_title": "Embedded dashboard unavailable",
+    "loading_dashboard": "Loading Grafana dashboard...",
+    "missing_dashboards": "Set `REACT_APP_GRAFANA_DASHBOARD_*` environment variables to embed Grafana dashboards here.",
+    "open_in_new_tab": "Open in new tab",
+    "retry_embed": "Retry embed"
+  },
   "configurations": {
     "add_interface": "Add Interface",
     "add_radio": "Add Radio",
