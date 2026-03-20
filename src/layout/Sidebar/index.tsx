@@ -9,7 +9,6 @@ import {
   Flex,
   useColorModeValue,
   Text,
-  Spacer,
   useBreakpoint,
   VStack,
   Accordion,
@@ -58,38 +57,34 @@ export const Sidebar = ({ routes, isOpen, toggle, logo, version, topNav, childre
     </Box>
   );
 
-  const sidebarContent = React.useMemo(
-    () => (
-      <>
-        <Accordion allowToggle>
-          <VStack spacing={2} alignItems="start" w="100%" px={4}>
-            {topNav ? topNav(isRouteActive, toggle) : null}
-            {routes
-              .filter(({ hidden, authorized }) => !hidden && authorized.includes(user?.userRole ?? ''))
-              .map((route) =>
-                route.children ? (
-                  <NestedNavButton key={route.id} isActive={isRouteActive} route={route} toggleSidebar={toggle} />
-                ) : (
-                  <NavLinkButton
-                    key={route.id}
-                    isActive={isRouteActive(route.path)}
-                    route={route}
-                    toggleSidebar={toggle}
-                  />
-                ),
-              )}
-          </VStack>
-        </Accordion>
-        <Spacer />
-        <Box mb={2}>{children}</Box>
-        <Box>
-          <Text color="gray.400">
-            {t('footer.version')} {version}
-          </Text>
-        </Box>
-      </>
-    ),
-    [user?.userRole, location, topNav],
+  const navigationContent = (
+    <Accordion allowToggle>
+      <VStack spacing={2} alignItems="start" w="100%" px={4}>
+        {topNav ? topNav(isRouteActive, toggle) : null}
+        {routes
+          .filter(({ hidden, authorized }) => !hidden && authorized.includes(user?.userRole ?? ''))
+          .map((route) =>
+            route.children ? (
+              <NestedNavButton key={route.id} isActive={isRouteActive} route={route} toggleSidebar={toggle} />
+            ) : (
+              <NavLinkButton key={route.id} isActive={isRouteActive(route.path)} route={route} toggleSidebar={toggle} />
+            ),
+          )}
+      </VStack>
+    </Accordion>
+  );
+
+  const footerContent = (
+    <>
+      <Box mb={2} w="100%" px={4}>
+        {children}
+      </Box>
+      <Box w="100%" px={4} pb={2}>
+        <Text color="gray.400">
+          {t('footer.version')} {version}
+        </Text>
+      </Box>
+    </>
   );
 
   return (
@@ -109,10 +104,13 @@ export const Sidebar = ({ routes, isOpen, toggle, logo, version, topNav, childre
         >
           <DrawerCloseButton />
           <DrawerBody maxW="250px" px="1rem">
-            <Box maxW="100%" h="90vh">
+            <Box maxW="100%" h="90vh" display="flex" flexDirection="column">
               {brand}
-              <Flex direction="column" mb="40px" h="calc(100vh - 200px)" alignItems="center" overflowY="auto">
-                {sidebarContent}
+              <Flex direction="column" mb="40px" h="calc(100vh - 200px)" alignItems="center" minH={0}>
+                <Box w="100%" flex={1} overflowY="auto">
+                  {navigationContent}
+                </Box>
+                {footerContent}
               </Flex>
             </Box>
           </DrawerBody>
@@ -131,10 +129,15 @@ export const Sidebar = ({ routes, isOpen, toggle, logo, version, topNav, childre
             ml="16px"
             borderRadius="15px"
             border="0.5px solid"
+            display="flex"
+            flexDirection="column"
           >
             {brand}
-            <Flex direction="column" h="calc(100vh - 160px)" alignItems="center" overflowY="auto">
-              {sidebarContent}
+            <Flex direction="column" h="calc(100vh - 160px)" alignItems="center" minH={0}>
+              <Box w="100%" flex={1} overflowY="auto">
+                {navigationContent}
+              </Box>
+              {footerContent}
             </Flex>
           </Box>
         </Box>
