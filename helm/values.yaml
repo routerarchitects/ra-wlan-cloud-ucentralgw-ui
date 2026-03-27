@@ -76,6 +76,8 @@ podAnnotations: {}
 # Application
 public_env_variables:
   REACT_APP_UCENTRALSEC_URL: https://ucentral.dpaas.arilia.com:16001
+  REACT_APP_MONITORING_CONTROL_PATH: /api/v1/monitoring/control
+  REACT_APP_SERVICE_CONTROL_HEALTH_PATH: /api/v1/service-control/healthz
   REACT_APP_GRAFANA_URL: http://localhost:3000
   REACT_APP_GRAFANA_DEFAULT_DASHBOARD: /dashboards
   REACT_APP_GRAFANA_DASHBOARD_CADVISOR: /grafana/d/pMEd7m0Mz/cadvisor-exporter?orgId=1

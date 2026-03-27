@@ -22,16 +22,50 @@ import { Card } from 'components/Containers/Card';
 import { CardHeader } from 'components/Containers/Card/CardHeader';
 import { CardBody } from 'components/Containers/Card/CardBody';
 import { DeleteButton } from 'components/Buttons/DeleteButton';
+import { useSetAiAgentControl } from 'hooks/Network/AiAgentControl';
 import { useNotification } from 'hooks/useNotification';
 import { useSetGrafanaControl } from 'hooks/Network/Grafana';
+import { useServiceControlStatus } from 'hooks/Network/ServiceControlStatus';
 import { useDeleteSimulatedDevices } from 'hooks/Network/Simulations';
 import { useUiFeatureFlags } from 'hooks/useUiFeatureFlags';
 
 const AdvancedSystemPage = () => {
   const { successToast, apiErrorToast } = useNotification();
-  const { aiAssistantEnabled, grafanaEnabled, setAiAssistantEnabled, setGrafanaEnabled } = useUiFeatureFlags();
+  const {
+    aiAssistantEnabled,
+    grafanaEnabled,
+    setAiAssistantEnabled,
+    setGrafanaEnabled,
+  } = useUiFeatureFlags();
   const deleteSimulatedDevices = useDeleteSimulatedDevices();
+  const setAiAgentControl = useSetAiAgentControl();
   const setGrafanaControl = useSetGrafanaControl();
+  const { data: serviceControlStatus, isLoading: isServiceControlStatusLoading, refetch: refetchServiceControlStatus } =
+    useServiceControlStatus();
+
+  const aiAgentStatus = serviceControlStatus?.services?.['ai-agent'];
+  const monitoringStatus = serviceControlStatus?.services?.monitoring;
+  const aiAgentAvailable = typeof aiAgentStatus?.exists === 'boolean' ? aiAgentStatus.exists : true;
+  const monitoringAvailable =
+    typeof monitoringStatus?.running_count === 'number' && typeof monitoringStatus?.total_count === 'number';
+
+  React.useEffect(() => {
+    if (typeof aiAgentStatus?.running === 'boolean') setAiAssistantEnabled(aiAgentStatus.running);
+
+    if (typeof monitoringStatus?.running_count === 'number' && typeof monitoringStatus?.total_count === 'number') {
+      setGrafanaEnabled(monitoringStatus.total_count > 0 && monitoringStatus.running_count > 0);
+    } else if (!isServiceControlStatusLoading) {
+      // If monitoring status is unavailable, prefer a safe "disabled" UI state.
+      setGrafanaEnabled(false);
+    }
+  }, [
+    aiAgentStatus?.running,
+    isServiceControlStatusLoading,
+    monitoringStatus?.running_count,
+    monitoringStatus?.total_count,
+    setAiAssistantEnabled,
+    setGrafanaEnabled,
+  ]);
 
   const handleDeleteSimulatedDevices = async () =>
     deleteSimulatedDevices.mutateAsync(undefined, {
@@ -55,19 +89,49 @@ const AdvancedSystemPage = () => {
 
     try {
       const result = await setGrafanaControl.mutateAsync({ enabled });
+      await refetchServiceControlStatus();
       successToast({
         id: 'grafana-control',
-        description: `Grafana ${enabled ? 'enabled' : 'disabled'} (${result?.action ?? 'ok'})`,
+        description: `Monitoring stack ${enabled ? 'enabled' : 'disabled'} (${result?.action ?? 'ok'})`,
       });
     } catch (e) {
-      setGrafanaEnabled(!enabled);
+      await refetchServiceControlStatus();
       apiErrorToast({
         id: 'grafana-control-error',
         e,
-        fallbackMessage: 'Unable to change Grafana container state',
+        fallbackMessage: 'Unable to change monitoring stack state',
       });
     }
   };
+
+  const handleAiAssistantToggle = async (enabled: boolean) => {
+    setAiAssistantEnabled(enabled);
+
+    try {
+      const result = await setAiAgentControl.mutateAsync({ enabled });
+      await refetchServiceControlStatus();
+      successToast({
+        id: 'ai-agent-control',
+        description: `AI agent ${enabled ? 'enabled' : 'disabled'} (${result?.action ?? 'ok'})`,
+      });
+    } catch (e) {
+      await refetchServiceControlStatus();
+      apiErrorToast({
+        id: 'ai-agent-control-error',
+        e,
+        fallbackMessage: 'Unable to change AI agent container state',
+      });
+    }
+  };
+
+  const aiAssistantStatusText = !aiAgentAvailable ? 'Unavailable' : aiAssistantEnabled ? 'Enabled' : 'Disabled';
+
+  const grafanaStatusText =
+    monitoringAvailable
+      ? grafanaEnabled
+        ? 'Enabled'
+        : 'Disabled'
+      : 'Disabled';
 
   return (
     <VStack align="stretch" spacing={4}>
@@ -128,25 +192,26 @@ const AdvancedSystemPage = () => {
                 Show the AI assistant button in the navbar.
               </Text>
               <HStack pt={2}>
-                <Text fontSize="sm">{aiAssistantEnabled ? 'Enabled' : 'Disabled'}</Text>
+                <Text fontSize="sm">{aiAssistantStatusText}</Text>
                 <Switch
                   isChecked={aiAssistantEnabled}
-                  onChange={(event) => setAiAssistantEnabled(event.target.checked)}
+                  onChange={(event) => handleAiAssistantToggle(event.target.checked)}
+                  isDisabled={setAiAgentControl.isLoading || isServiceControlStatusLoading}
                 />
               </HStack>
             </Box>
 
             <Box>
-              <Heading size="sm">Enable Grafana Tab</Heading>
+              <Heading size="sm">Enable Monitoring (Grafana) Tab</Heading>
               <Text fontSize="sm" color="gray.500">
-                Show the Grafana tab in the System section.
+                Show the Grafana tab and start/stop monitoring containers.
               </Text>
               <HStack pt={2}>
-                <Text fontSize="sm">{grafanaEnabled ? 'Enabled' : 'Disabled'}</Text>
+                <Text fontSize="sm">{grafanaStatusText}</Text>
                 <Switch
                   isChecked={grafanaEnabled}
                   onChange={(event) => handleGrafanaToggle(event.target.checked)}
-                  isDisabled={setGrafanaControl.isLoading}
+                  isDisabled={setGrafanaControl.isLoading || isServiceControlStatusLoading}
                 />
               </HStack>
             </Box>

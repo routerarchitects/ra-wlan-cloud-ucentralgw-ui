@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-type GrafanaControlPayload = {
+type AiAgentControlPayload = {
   enabled: boolean;
 };
 
@@ -18,15 +18,12 @@ const getEnvValue = (key: string) => {
 const getAuthToken = () => localStorage.getItem('access_token') ?? sessionStorage.getItem('access_token');
 
 const AI_BASE_URL = getEnvValue('REACT_APP_AI_AGENT_URL') ?? 'http://localhost:8787';
-const MONITORING_CONTROL_PATH =
-  getEnvValue('REACT_APP_MONITORING_CONTROL_PATH') ??
-  getEnvValue('REACT_APP_GRAFANA_CONTROL_PATH') ??
-  '/api/v1/monitoring/control';
+const AI_AGENT_CONTROL_PATH = getEnvValue('REACT_APP_AI_AGENT_CONTROL_PATH') ?? '/api/v1/ai-agent/control';
 const TARGET = AI_BASE_URL
-  ? `${AI_BASE_URL.replace(/\/$/, '')}${MONITORING_CONTROL_PATH.startsWith('/') ? MONITORING_CONTROL_PATH : `/${MONITORING_CONTROL_PATH}`}`
-  : MONITORING_CONTROL_PATH;
+  ? `${AI_BASE_URL.replace(/\/$/, '')}${AI_AGENT_CONTROL_PATH.startsWith('/') ? AI_AGENT_CONTROL_PATH : `/${AI_AGENT_CONTROL_PATH}`}`
+  : AI_AGENT_CONTROL_PATH;
 
-const postGrafanaControl = async (payload: GrafanaControlPayload) => {
+const postAiAgentControl = async (payload: AiAgentControlPayload) => {
   const token = getAuthToken();
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) headers.Authorization = `Bearer ${token}`;
@@ -44,10 +41,10 @@ const postGrafanaControl = async (payload: GrafanaControlPayload) => {
       data?.detail ??
       data?.ErrorDescription ??
       (Array.isArray(data?.detail) ? JSON.stringify(data.detail) : undefined);
-    const error: any = new Error(serverDetail ?? `Monitoring control failed (${response.status})`);
+    const error: any = new Error(serverDetail ?? `AI agent control failed (${response.status})`);
     error.response = {
       data: {
-        ErrorDescription: serverDetail ?? `Monitoring control failed (${response.status})`,
+        ErrorDescription: serverDetail ?? `AI agent control failed (${response.status})`,
       },
     };
     throw error;
@@ -56,4 +53,4 @@ const postGrafanaControl = async (payload: GrafanaControlPayload) => {
   return data;
 };
 
-export const useSetGrafanaControl = () => useMutation((payload: GrafanaControlPayload) => postGrafanaControl(payload));
+export const useSetAiAgentControl = () => useMutation((payload: AiAgentControlPayload) => postAiAgentControl(payload));

@@ -26,6 +26,8 @@ const setStoredFlag = (key: string, value: boolean) => {
 
 export const useUiFeatureFlags = () => {
   const [flags, setFlags] = React.useState(getStoredFlags);
+  const aiAssistantLicensed = true;
+  const grafanaLicensed = true;
 
   React.useEffect(() => {
     const onAnyStorageChange = () => setFlags(getStoredFlags());
@@ -38,15 +40,18 @@ export const useUiFeatureFlags = () => {
     };
   }, []);
 
-  const setAiAssistantEnabled = React.useCallback(
-    (value: boolean) => setStoredFlag(UI_FLAG_KEYS.aiAssistant, value),
-    [],
-  );
+  const setAiAssistantEnabled = React.useCallback((value: boolean) => setStoredFlag(UI_FLAG_KEYS.aiAssistant, value), []);
 
   const setGrafanaEnabled = React.useCallback((value: boolean) => setStoredFlag(UI_FLAG_KEYS.grafanaTab, value), []);
 
+  const aiAssistantEnabled = flags.aiAssistantEnabled && aiAssistantLicensed;
+  const grafanaEnabled = flags.grafanaEnabled && grafanaLicensed;
+
   return {
-    ...flags,
+    aiAssistantEnabled,
+    grafanaEnabled,
+    aiAssistantLicensed,
+    grafanaLicensed,
     setAiAssistantEnabled,
     setGrafanaEnabled,
   };

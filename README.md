@@ -40,4 +40,6 @@ Here are the current default values:
 
 ```
 VITE_UCENTRALSEC_URL="https://ucentral.dpaas.arilia.com:16001"
+VITE_MONITORING_CONTROL_PATH="/api/v1/monitoring/control"
+VITE_SERVICE_CONTROL_HEALTH_PATH="/api/v1/service-control/healthz"
 ```
