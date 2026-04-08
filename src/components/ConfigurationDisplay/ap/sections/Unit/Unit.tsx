@@ -54,43 +54,47 @@ const Unit = ({ editing }: Props) => {
               // @ts-ignore
               emptyIsUndefined
               isDisabled={!editing}
+              // The device expects timezone offsets in POSIX format, where the sign is
+              // inverted compared to standard UTC notation (e.g., UTC+5:30 -> UTC-5:30).
+              // Therefore, these option values are intentionally reversed so the device
+              // applies the correct timezone.
               options={[
                 { value: '', label: t('common.none') },
                 {
-                  value: 'UTC-11:00',
+                  value: 'UTC+11:00',
                   label: 'Midway Islands Time (UTC-11:00)',
                 },
                 {
-                  value: 'UTC-10:00',
+                  value: 'UTC+10:00',
                   label: 'Hawaii Standard Time (UTC-10:00)',
                 },
                 {
-                  value: 'UTC-8:00',
+                  value: 'UTC+8:00',
                   label: 'Pacific Standard Time (UTC-8:00)',
                 },
                 {
-                  value: 'UTC-7:00',
+                  value: 'UTC+7:00',
                   label: 'Mountain Standard Time (UTC-7:00)',
                 },
                 {
-                  value: 'UTC-6:00',
+                  value: 'UTC+6:00',
                   label: 'Central Standard Time (UTC-6:00)',
                 },
                 {
-                  value: 'UTC-5:00',
+                  value: 'UTC+5:00',
                   label: 'Eastern Standard Time (UTC-5:00)',
                 },
                 {
-                  value: 'UTC-4:00',
+                  value: 'UTC+4:00',
                   label: 'Puerto Rico and US Virgin Islands Time (UTC-4:00)',
                 },
                 {
-                  value: 'UTC-3:30',
+                  value: 'UTC+3:30',
                   label: 'Canada Newfoundland Time (UTC-3:30)',
                 },
-                { value: 'UTC-3:00', label: 'Brazil Eastern Time (UTC-3:00)' },
+                { value: 'UTC+3:00', label: 'Brazil Eastern Time (UTC-3:00)' },
                 {
-                  value: 'UTC-1:00',
+                  value: 'UTC+1:00',
                   label: 'Central African Time (UTC-1:00)',
                 },
                 {
@@ -98,52 +102,52 @@ const Unit = ({ editing }: Props) => {
                   label: 'Universal Coordinated Time (UTC)',
                 },
                 {
-                  value: 'UTC+1:00',
+                  value: 'UTC-1:00',
                   label: 'European Central Time (UTC+1:00)',
                 },
                 {
-                  value: 'UTC+2:00',
+                  value: 'UTC-2:00',
                   label: 'Eastern European Time (UTC+2:00)',
                 },
                 {
-                  value: 'UTC+2:00',
+                  value: 'UTC-2:00',
                   label: '(Arabic) Egypt Standard Time (UTC+2:00)',
                 },
                 {
-                  value: 'UTC+3:00',
+                  value: 'UTC-3:00',
                   label: 'Eastern African Time (UTC+3:00)',
                 },
-                { value: 'UTC+3:30', label: 'Middle East Time (UTC+3:30)' },
-                { value: 'UTC+4:00', label: 'Near East Time (UTC+4:00)' },
+                { value: 'UTC-3:30', label: 'Middle East Time (UTC+3:30)' },
+                { value: 'UTC-4:00', label: 'Near East Time (UTC+4:00)' },
                 {
-                  value: 'UTC+5:00',
+                  value: 'UTC-5:00',
                   label: 'Pakistan Lahore Time (UTC+5:00)',
                 },
-                { value: 'UTC+5:30', label: 'India Standard Time (UTC+5:30)' },
+                { value: 'UTC-5:30', label: 'India Standard Time (UTC+5:30)' },
                 {
-                  value: 'UTC+6:00',
+                  value: 'UTC-6:00',
                   label: 'Bangladesh Standard Time (UTC+6:00)',
                 },
                 {
-                  value: 'UTC+7:00',
+                  value: 'UTC-7:00',
                   label: 'Vietnam Standard Time (UTC+7:00)',
                 },
-                { value: 'UTC+8:00', label: 'China Taiwan Time (UTC+8:00)' },
-                { value: 'UTC+9:00', label: 'Japan Standard Time (UTC+9:00)' },
+                { value: 'UTC-8:00', label: 'China Taiwan Time (UTC+8:00)' },
+                { value: 'UTC-9:00', label: 'Japan Standard Time (UTC+9:00)' },
                 {
-                  value: 'UTC+9:30',
+                  value: 'UTC-9:30',
                   label: 'Australia Central Time (UTC+9:30)',
                 },
                 {
-                  value: 'UTC+10:00',
+                  value: 'UTC-10:00',
                   label: 'Australia Eastern Time (UTC+10:00)',
                 },
                 {
-                  value: 'UTC+11:00',
+                  value: 'UTC-11:00',
                   label: 'Solomon Standard Time (UTC+11:00)',
                 },
                 {
-                  value: 'UTC+12:00',
+                  value: 'UTC-12:00',
                   label: 'New Zealand Standard Time (UTC+12:00)',
                 },
               ]}
