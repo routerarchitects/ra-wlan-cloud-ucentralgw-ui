@@ -54,6 +54,10 @@ const Unit = ({ editing }: Props) => {
               // @ts-ignore
               emptyIsUndefined
               isDisabled={!editing}
+              // The device expects timezone offsets in POSIX format, where the sign is
+              // inverted compared to standard UTC notation (e.g., UTC+5:30 -> UTC-5:30).
+              // Therefore, these option values are intentionally reversed so the device
+              // applies the correct timezone.
               options={[
                 { value: '', label: t('common.none') },
                 {
