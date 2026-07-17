@@ -59,3 +59,10 @@ To generate production-ready static assets:
 npm run build
 ```
 Once the build completes, the output assets will be generated in the `./build` directory and can be served using Nginx, Apache, or any static content host.
+
+### Configuration
+To configure the application endpoints during local development, create a `.env` file in the root folder and set the Security Service (`owsec`) URL:
+
+```text
+VITE_UCENTRALSEC_URL=https://<owsec-host>:16001
+```
