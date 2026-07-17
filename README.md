@@ -9,16 +9,16 @@
 ## Overview
 The OpenWiFi Gateway UI (OWGW-UI) is the official web management interface for the Gateway Service (`owgw`) within the Telecom Infra Project (TIP) OpenWiFi CloudSDK (OWSDK) ecosystem.
 
-OWGW-UI provides a comprehensive React-based console that lets network operators monitor, command, and manage all Access Points and switches connected to the OpenWiFi gateway. To run the interface, you can set it up locally for [development](#development) or compile it for [production](#production).
+OWGW-UI provides a React-based console that lets network administrators monitor, command, and manage Access Points and other uCentral-compatible devices (such as switches & olg) connected to the OpenWiFi gateway. To run the interface, you can set it up locally for [development](#development) or compile it for [production](#production).
 
 ## Role in Mango Cloud
 This service is part of [Mango Cloud](https://www.mangowifi.cloud/), Router Architects’ open-source platform for managed Wi-Fi and connectivity operations.
 
-Within Mango Cloud, **OWGW-UI** serves as the **Gateway Operator Console** (integrated into the primary management dashboard).
+Within Mango Cloud, **OWGW-UI** serves as the **Gateway Management Console** (integrated into the primary management dashboard).
 
 Key integrations include:
 * **Device Control Panel**: Interacts with the Gateway REST API (`owgw` port `16002`) to visually trigger device commands (reboots, LED toggles, channel changes, telemetry pulls).
-* **Security & Auth Integration**: Authenticates operators and signs requests via the Security Service (`owsec` port `16001`), utilizing JWT tokens.
+* **Security & Authentication Integration**: Authenticates administrators through the Security Service (`owsec` port `16001`) and uses the issued JWT tokens to authorize API requests.
 * **Firmware Management Board**: Manages firmware release binaries and orchestrates batch upgrades via the Firmware Service (`owfms` port `16003`).
 
 ### Resources
@@ -37,7 +37,7 @@ The Gateway Console provides a unified interface for the following operations:
 * **Default Configurations**: Manage and assign default JSON configuration templates to coordinate setting profiles across group nodes.
 * **Firmware Upgrade Coordinator**: Keep track of available firmware releases, set default binaries per device type, and schedule upgrades.
 * **Diagnostics & Telemetry**: Review real-time console logs, WebSocket telemetry reports, and notifications stream directly from active Access Points.
-* **Operator Role-Based Access (RBAC)**: Manage users, operators, passwords, and service preferences via a secure administrative interface.
+* **Administrative Role-Based Access (RBAC)**: Manage users, passwords, and service preferences via a secure administrative interface.
 
 ## Running the Application
 
