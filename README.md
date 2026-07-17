@@ -1,43 +1,61 @@
-# uCentralGW UI
+<p align="center">
+  <img src="images/project/logo.svg" height="170" align="middle" alt="TIP OpenWiFi Logo" />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/project/mango-logo.png" height="90" align="middle" alt="Mango Cloud Logo" />
+</p>
 
-## What is this?
+# OpenWiFi Gateway UI (OWGW-UI)
 
-The uCentralGW Client is a user interface that lets you monitor and manage devices connected to the [uCentral gateway](https://github.com/Telecominfraproject/wlan-cloud-ucentralgw). To use the interface,
-you either need to run it on your machine for [development](#development) or build it for [production](#production).
+## Overview
+The OpenWiFi Gateway UI (OWGW-UI) is the official web management interface for the Gateway Service (`owgw`) within the Telecom Infra Project (TIP) OpenWiFi CloudSDK (OWSDK) ecosystem.
 
-NOTE: This UI will be evolving as micro services are added to the uCentral program most notably with provisioning, base dashboard, firmware, device management
+OWGW-UI provides a comprehensive React-based console that lets network operators monitor, command, and manage all Access Points and switches connected to the OpenWiFi gateway. To run the interface, you can set it up locally for [development](#development) or compile it for [production](#production).
 
-## Running the solution
+## Role in Mango Cloud
+This service is part of [Mango Cloud](https://www.mangowifi.cloud/), Router Architects’ open-source platform for managed Wi-Fi and connectivity operations.
+
+Within Mango Cloud, **OWGW-UI** serves as the **Gateway Operator Console** (integrated into the primary management dashboard).
+
+Key integrations include:
+* **Device Control Panel**: Interacts with the Gateway REST API (`owgw` port `16002`) to visually trigger device commands (reboots, LED toggles, channel changes, telemetry pulls).
+* **Security & Auth Integration**: Authenticates operators and signs requests via the Security Service (`owsec` port `16001`), utilizing JWT tokens.
+* **Firmware Management Board**: Manages firmware release binaries and orchestrates batch upgrades via the Firmware Service (`owfms` port `16003`).
+
+### Resources
+* [Mango Cloud Website](https://www.mangowifi.cloud/)
+* [Mango Cloud Deployment Guide](https://github.com/routerarchitects/mango-cloud-deployment)
+* [Router Architects GitHub Organization](https://github.com/routerarchitects)
+
+### Gateway Guides
+* [Device Onboarding Overview](https://www.mangowifi.cloud/docs/operations/device-onboarding/onboarding-overview)
+* [Device Operations & Commands](https://www.mangowifi.cloud/docs/operations/device-operations-owgw/device-actions-overview)
+* [Telemetry & Monitoring](https://www.mangowifi.cloud/docs/operations/device-operations-owgw/telemetry-monitoring)
+
+## Key Features
+The Gateway Console provides a unified interface for the following operations:
+* **Active Device Manager**: Live inventory dashboard displaying device connections, hardware types, IP/MAC addresses, and network interface statuses (Devices and Device pages).
+* **Default Configurations**: Manage and assign default JSON configuration templates to coordinate setting profiles across group nodes.
+* **Firmware Upgrade Coordinator**: Keep track of available firmware releases, set default binaries per device type, and schedule upgrades.
+* **Diagnostics & Telemetry**: Review real-time console logs, WebSocket telemetry reports, and notifications stream directly from active Access Points.
+* **Operator Role-Based Access (RBAC)**: Manage users, operators, passwords, and service preferences via a secure administrative interface.
+
+## Running the Application
 
 ### Development
+To run the development server locally, ensure you have [Node.js](https://nodejs.org/) installed:
 
-You need to run these commands in the root folder of the project and also have npm installed on your machine.
-
-```
-git clone https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui
-cd wlan-cloud-ucentralgw-ui
+```bash
+git clone https://github.com/routerarchitects/ra-wlan-cloud-ucentralgw-ui
+cd ra-wlan-cloud-ucentralgw-ui
 npm install
 npm run dev
 ```
+By default, the development server will run on port `3000` (`http://localhost:3000`).
 
-### Production
+### Production Build
+To generate production-ready static assets:
 
-You need to run this in the root folder of the project and also have npm installed on your machine.
-
-```
-git clone https://github.com/Telecominfraproject/wlan-cloud-ucentralgw-ui
-cd wlan-cloud-ucentralgw-ui
-npm install
+```bash
 npm run build
 ```
-
-Once the build is done, you can move the `build` folder on your server.
-
-### Configuration
-
-You can control the uCentral Security Service URL (uCentralSec) by modifying the ENV variable "VITE_UCENTRALSEC_URL". There is an example .env file located at the root of this repository.
-Here are the current default values:
-
-```
-VITE_UCENTRALSEC_URL="https://ucentral.dpaas.arilia.com:16001"
-```
+Once the build completes, the output assets will be generated in the `./build` directory and can be served using Nginx, Apache, or any static content host.
