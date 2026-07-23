@@ -16,6 +16,9 @@ type Props = ConfigurationDisplayProps & {
   sections: SectionDef[];
 };
 
+const getSectionDefaultConfiguration = (section: SectionDef, t: (key: string) => string) =>
+  section.key === 'config-raw' ? [] : section.schema(t).cast({});
+
 const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = false, renderModals, sections }: Props) => {
   const { t } = useTranslation();
   const { tabIndex, onTabChange, tabsWithNewConfiguration, tabsRemovedConfiguration } = useConfigurationTabs();
@@ -26,7 +29,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
     const base: Record<string, ConfigurationSection> = {};
     for (const section of sections) {
       base[section.key] = {
-        data: { configuration: section.schema(t).cast({}) },
+        data: { configuration: getSectionDefaultConfiguration(section, t) },
         isDirty: false,
         invalidValues: [],
       };
@@ -92,7 +95,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
       if (def) {
         setSectionState((prev) => ({
           ...prev,
-          [sub]: { data: { configuration: def.schema(t).cast({}) }, isDirty: false, invalidValues: [] },
+          [sub]: { data: { configuration: getSectionDefaultConfiguration(def, t) }, isDirty: false, invalidValues: [] },
         }));
       }
     },
@@ -142,7 +145,7 @@ const ConfigurationDisplayBase = ({ configuration, onConfigChange, isLoading = f
         name: section.name,
         description: '',
         weight: 0,
-        configuration: section.schema(t).cast({}),
+        configuration: getSectionDefaultConfiguration(section, t),
       };
     }
     return defaults;

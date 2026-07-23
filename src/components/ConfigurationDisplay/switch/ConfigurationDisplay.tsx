@@ -11,6 +11,8 @@ import EthernetSection from './sections/Ethernet';
 import { ETHERNET_SCHEMA } from './sections/Ethernet/ethernetConstants';
 import InterfaceSection from './sections/Interfaces';
 import { INTERFACES_SCHEMA } from './sections/Interfaces/interfacesConstants';
+import ConfigRawSection from '../common/sections/ConfigRaw';
+import { CONFIG_RAW_SCHEMA } from '../common/sections/ConfigRaw/configRawConstants';
 import ThirdPartySection from './sections/ThirdParty';
 import { THIRD_PARTY_SCHEMA } from './sections/ThirdParty/thirdPartyConstants';
 import ConfigurationDisplayBase from '../common/ConfigurationDisplayBase';
@@ -23,6 +25,7 @@ const sections: SectionDef[] = [
   { key: 'services', tabLabel: 'configurations.services', name: 'Services', schema: SERVICES_SCHEMA, Component: ServicesSection },
   { key: 'ethernet', tabLabel: 'configurations.ethernet', name: 'Ethernet', schema: ETHERNET_SCHEMA, Component: EthernetSection },
   { key: 'interfaces', tabLabel: 'configurations.interfaces', name: 'Interfaces', schema: INTERFACES_SCHEMA, Component: InterfaceSection },
+  { key: 'config-raw', tabLabel: 'configurations.config_raw', name: 'Config Raw', schema: CONFIG_RAW_SCHEMA, Component: ConfigRawSection },
   { key: 'third-party', tabLabel: 'configurations.third_party', name: 'Third Party', schema: THIRD_PARTY_SCHEMA, Component: ThirdPartySection },
 ];
 

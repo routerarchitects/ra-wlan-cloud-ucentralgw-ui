@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-const orderedConfigurations = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'third-party'];
+const orderedConfigurations = ['globals', 'unit', 'metrics', 'services', 'radios', 'interfaces', 'nat', 'config-raw', 'third-party'];
 
 const useConfigurationTabs = () => {
   const [tabIndex, setTabIndex] = useState(0);

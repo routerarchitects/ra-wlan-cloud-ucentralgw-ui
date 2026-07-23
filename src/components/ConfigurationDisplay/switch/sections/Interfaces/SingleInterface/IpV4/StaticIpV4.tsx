@@ -30,7 +30,6 @@ const IpV4 = ({ isDisabled, namePrefix, isEnabled, role }: Props) => {
           label="gateway"
           definitionKey="interface.ipv4.gateway"
           isDisabled={isDisabled}
-          isRequired
         />
         <ToggleField
           name={`${namePrefix}.send-hostname`}

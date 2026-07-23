@@ -13,6 +13,8 @@ import InterfaceSection from '../ap/sections/Interfaces';
 import { INTERFACES_SCHEMA } from '../ap/sections/Interfaces/interfacesConstants';
 import NatSection from './sections/Nat';
 import { NAT_SCHEMA } from './sections/Nat/natConstants';
+import ConfigRawSection from '../common/sections/ConfigRaw';
+import { CONFIG_RAW_SCHEMA } from '../common/sections/ConfigRaw/configRawConstants';
 import ThirdPartySection from '../ap/sections/ThirdParty';
 import { THIRD_PARTY_SCHEMA } from '../ap/sections/ThirdParty/thirdPartyConstants';
 import ConfigurationDisplayBase from '../common/ConfigurationDisplayBase';
@@ -26,6 +28,7 @@ const sections: SectionDef[] = [
   { key: 'radios', tabLabel: 'configurations.radios', name: 'Radios', schema: RADIOS_SCHEMA, Component: RadiosSection },
   { key: 'interfaces', tabLabel: 'configurations.interfaces', name: 'Interfaces', schema: INTERFACES_SCHEMA, Component: InterfaceSection },
   { key: 'nat', tabLabel: 'configurations.nat', name: 'Nat', schema: NAT_SCHEMA, Component: NatSection },
+  { key: 'config-raw', tabLabel: 'configurations.config_raw', name: 'Config Raw', schema: CONFIG_RAW_SCHEMA, Component: ConfigRawSection },
   { key: 'third-party', tabLabel: 'configurations.third_party', name: 'Third Party', schema: THIRD_PARTY_SCHEMA, Component: ThirdPartySection },
 ];
 

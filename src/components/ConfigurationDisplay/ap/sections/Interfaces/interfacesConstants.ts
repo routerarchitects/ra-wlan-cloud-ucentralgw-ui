@@ -681,8 +681,7 @@ export const INTERFACE_IPV4_SCHEMA = (t, useDefault = false) => {
       then: string().nullable(),
       otherwise: string()
         .test('test-ipv4-subnet', t('form.invalid_ipv4'), testIpv4)
-        .required(t('form.required'))
-        .default('192.168.1.1'),
+        .default(''),
     }),
     'send-hostname': bool().when('addressing', {
       is: 'dynamic',
