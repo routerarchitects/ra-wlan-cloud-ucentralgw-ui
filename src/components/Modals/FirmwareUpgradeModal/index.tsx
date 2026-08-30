@@ -12,6 +12,7 @@ import {
   Switch,
   Heading,
   Text,
+  Input,
 } from '@chakra-ui/react';
 import { Formik, FormikProps } from 'formik';
 import { useTranslation } from 'react-i18next';
@@ -42,6 +43,10 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
     | undefined
   >();
   const [isRedirector, { toggle }] = useBoolean(false);
+  const [useLocalCertificate, { toggle: toggleLocalCert }] = useBoolean(false);
+  const [caCert, setCaCert] = React.useState('');
+  const [clientCert, setClientCert] = React.useState('');
+  const [clientKey, setClientKey] = React.useState('');
   const { data: device, isFetching: isFetchingDevice } = useGetDevice({ serialNumber, onClose });
   const { data: firmware, isFetching: isFetchingFirmware } = useGetAvailableFirmware({
     deviceType: device?.compatible ?? '',
@@ -58,6 +63,14 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
   const submit = (uri: string) => {
     upgrade({
       keepRedirector: isRedirector,
+      useLocalCertificate,
+      ...(useLocalCertificate
+        ? {}
+        : {
+            caCert,
+            clientCert,
+            clientKey,
+          }),
       uri,
       signature:
         device?.restrictedDevice && !device?.restrictionDetails?.developer ? ref.current?.values?.signature : undefined,
@@ -98,6 +111,51 @@ export const FirmwareUpgradeModal = ({ modalProps: { isOpen, onClose }, serialNu
                 </FormLabel>
                 <Switch isChecked={isRedirector} onChange={toggle} borderRadius="15px" size="lg" />
               </FormControl>
+              {/* Render a form control for "Use Local Certificate" option in Firmware Upgrade modal */}
+              <FormControl mt={3}>
+                <FormLabel ms="4px" fontSize="md" fontWeight="normal">
+                  {t('commands.use_local_certificate')}
+                </FormLabel>
+                <Switch isChecked={useLocalCertificate} onChange={toggleLocalCert} borderRadius="15px" size="lg" />
+              </FormControl>
+          {!useLocalCertificate && (
+                <>
+                  <FormControl mt={3}>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="normal">
+                      {t('commands.ca_certificate')}
+                    </FormLabel>
+                    <Input
+                      value={caCert}
+                      onChange={(e) => setCaCert(e.target.value)}
+                      placeholder="Paste CA Certificate"
+                    />
+                  </FormControl>
+
+                  <FormControl mt={3}>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="normal">
+                      {t('commands.client_certificate')}
+                    </FormLabel>
+                    <Input
+                      value={clientCert}
+                      onChange={(e) => setClientCert(e.target.value)}
+                      placeholder="Paste Client Certificate"
+                    />
+                  </FormControl>
+
+                  <FormControl mt={3}>
+                    <FormLabel ms="4px" fontSize="md" fontWeight="normal">
+                      {t('commands.client_key')}
+                    </FormLabel>
+                    <Input
+                      type="password"
+                      value={clientKey}
+                      onChange={(e) => setClientKey(e.target.value)}
+                      placeholder="Paste Client Key"
+                    />
+                  </FormControl>
+                </>
+              )}
+
               {device?.restrictedDevice && !device?.restrictionDetails?.developer && (
                 <Formik<{ signature?: string }>
                   innerRef={ref as Ref<FormikProps<{ signature?: string | undefined }>> | undefined}
