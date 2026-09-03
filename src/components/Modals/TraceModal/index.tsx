@@ -45,12 +45,32 @@ export const TraceModal = ({ serialNumber, modalProps }: TraceModalProps) => {
   const traceDevice = useTrace({ serialNumber, alertOnCompletion: !form.waitForResponse });
   const download = useDownloadTrace({ serialNumber, commandId: traceDevice.data?.data.UUID ?? '' });
 
+  const [isDelaying, setIsDelaying] = React.useState(false);
+
+  // add 3 second delay to loader
+  React.useEffect(() => {
+  if (!traceDevice.data) {
+    setIsDelaying(false);
+    return;
+  }
+
+  setIsDelaying(true);
+
+  const timerId = setTimeout(() => {
+    setIsDelaying(false);
+  }, 3000);
+
+  return () => clearTimeout(timerId);
+}, [traceDevice.data]);
+
+
   const onFormChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
   };
+
   const onToggleChange = (e: {
     target: {
       name: string;
@@ -88,24 +108,25 @@ export const TraceModal = ({ serialNumber, modalProps }: TraceModalProps) => {
       title={t('controller.devices.trace')}
       options={{ modalSize: 'sm' }}
       topRightButtons={
+        
         traceDevice.data ? (
-          <Button rightIcon={<ArrowLeft />} onClick={traceDevice.reset}>
+          <Button rightIcon={<ArrowLeft />} onClick={traceDevice.reset} isLoading={isDelaying}>
             {t('common.go_back')}
           </Button>
         ) : (
-          <Button colorScheme="blue" onClick={onStart} isLoading={traceDevice.isLoading}>
+          <Button colorScheme="blue" onClick={onStart} isLoading={traceDevice.isLoading || isDelaying}>
             {t('common.start')}
           </Button>
         )
       }
     >
       <Box>
-        {traceDevice.isLoading && (
+        {(traceDevice.isLoading || isDelaying) && (
           <Center my="100px">
             <Spinner size="xl" />
           </Center>
         )}
-        {traceDevice.data && (
+        {traceDevice.data && !isDelaying && (
           <Center my="100px">
             <Button onClick={onDownload} colorScheme="blue" isLoading={download.isFetching}>
               {t('controller.trace.download')}
