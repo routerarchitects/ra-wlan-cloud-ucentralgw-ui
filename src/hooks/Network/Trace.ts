@@ -133,7 +133,7 @@ export const useDownloadTrace = ({ serialNumber, commandId }: { serialNumber: st
           // allowing them to manually click Download again later without permanently failing.
           toast({
             id: `trace-download-not-ready-${serialNumber}`,
-            title: t('common.warning', { defaultValue: 'Warning' }),
+            title: t('common.information', { defaultValue: 'Information' }),
             description: t('controller.trace.still_preparing', {
               defaultValue: 'Trace file is still being prepared. Please try again shortly.',
             }),
