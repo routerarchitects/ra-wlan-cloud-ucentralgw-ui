@@ -43,17 +43,17 @@ export type TraceResponse = {
 const startTrace = async (
   traceData:
     | {
-        serialNumber: string;
-        when?: number;
-        network: 'up' | 'down';
-        duration: number;
-      }
+      serialNumber: string;
+      when?: number;
+      network: 'up' | 'down';
+      duration: number;
+    }
     | {
-        serialNumber: string;
-        when?: number;
-        network: 'up' | 'down';
-        numberOfPackets: number;
-      },
+      serialNumber: string;
+      when?: number;
+      network: 'up' | 'down';
+      numberOfPackets: number;
+    },
 ) =>
   axiosGw.post<TraceResponse>(`device/${traceData.serialNumber}/trace`, {
     ...traceData,
@@ -110,7 +110,7 @@ export const useDownloadTrace = ({ serialNumber, commandId }: { serialNumber: st
         throw new TraceFileNotReadyError();
       }
       return response;
-    },  
+    },
     {
       enabled: false,
       // Retry up to 5 times (1 initial + 5 retries = max 6 requests) strictly for HTTP 202 responses.
@@ -119,13 +119,17 @@ export const useDownloadTrace = ({ serialNumber, commandId }: { serialNumber: st
       onSuccess: (response) => {
         const blob = new Blob([response.data], { type: 'application/octet-stream' });
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
+        const url = window.URL.createObjectURL(blob);
+        link.href = url;
         const headerLine =
-          (response.headers['content-disposition'] as string | undefined) ??
-          (response.headers['content-disposition'] as string | undefined);
+          response.headers['content-disposition'] as string | undefined;
         const filename = headerLine?.split('filename=')[1]?.split(',')[0] ?? `Trace_${commandId}.pcap`;
         link.download = filename;
         link.click();
+        //revoke the temporary url to free up memory
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+        }, 0);
       },
       onError: (e) => {
         if (e instanceof TraceFileNotReadyError) {
