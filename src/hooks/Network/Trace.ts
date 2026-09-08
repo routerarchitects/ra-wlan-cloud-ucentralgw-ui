@@ -110,11 +110,11 @@ export const useDownloadTrace = ({ serialNumber, commandId }: { serialNumber: st
         throw new TraceFileNotReadyError();
       }
       return response;
-    },
+    },  
     {
       enabled: false,
       // Retry up to 5 times (1 initial + 5 retries = max 6 requests) strictly for HTTP 202 responses.
-      retry: (failureCount, error) => error instanceof TraceFileNotReadyError && failureCount <= 5,
+      retry: (failureCount, error) => error instanceof TraceFileNotReadyError && failureCount < 5,
       retryDelay: 2000,
       onSuccess: (response) => {
         const blob = new Blob([response.data], { type: 'application/octet-stream' });
