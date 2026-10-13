@@ -68,8 +68,9 @@ prov.interceptors.response.use(
 );
 
 const gw = axios.default.create({ baseURL: secUrl });
+const GATEWAY_REQ_TIMEOUT = 130000;
 
-gw.defaults.timeout = 120000;
+gw.defaults.timeout = GATEWAY_REQ_TIMEOUT;
 gw.defaults.headers.get.Accept = 'application/json';
 gw.defaults.headers.post.Accept = 'application/json';
 
