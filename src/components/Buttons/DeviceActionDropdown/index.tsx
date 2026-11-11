@@ -8,11 +8,14 @@ import {
   Portal,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
 import { Barcode, Power, TerminalWindow, WifiHigh, Wrench } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
+import RegulatoryCountryModal from 'components/Modals/RegulatoryCountryModal';
 import { useControllerStore } from 'contexts/ControllerSocketProvider/useStore';
 import { useBlinkDevice, useGetDeviceRtty } from 'hooks/Network/Devices';
 import { useUpdateDeviceToLatest } from 'hooks/Network/Firmware';
@@ -61,6 +64,8 @@ const DeviceActionDropdown = ({
   const deviceType = device?.deviceType ?? 'ap';
   const connectColor = useColorModeValue('blackAlpha', 'gray');
   const addEventListeners = useControllerStore((state) => state.addEventListeners);
+  const queryClient = useQueryClient();
+  const countryModal = useDisclosure();
   const { refetch: getRtty, isFetching: isRtty } = useGetDeviceRtty({
     serialNumber: device.serialNumber,
     extraId: 'inventory-modal',
@@ -72,6 +77,23 @@ const DeviceActionDropdown = ({
     refresh,
   });
   const updateToLatest = useUpdateDeviceToLatest({ serialNumber: device.serialNumber, compatible: device.compatible });
+
+  // The fixedconfig command resets the AP. Refresh its stored capabilities on
+  // the next connection event, using the existing one-shot event listener rather
+  // than relying on the latest WebSocket message remaining in React state.
+  const handleCountrySubmitted = () => {
+    addEventListeners([
+      {
+        id: `device-connection-country-${device.serialNumber}-${Date.now()}`,
+        type: 'DEVICE_CONNECTION',
+        serialNumber: device.serialNumber,
+        callback: () => {
+          queryClient.invalidateQueries(['deviceCapabilities', device.serialNumber]);
+          refresh();
+        },
+      },
+    ]);
+  };
 
   const handleBlinkClick = () => {
     blink(undefined, {
@@ -235,6 +257,9 @@ const DeviceActionDropdown = ({
             <MenuItem onClick={handleOpenQueue}>{t('controller.queue.title')}</MenuItem>
             <MenuItem onClick={handleOpenFactoryReset}>{t('commands.factory_reset')}</MenuItem>
             <MenuItem onClick={handleOpenUpgrade}>{t('commands.firmware_upgrade')}</MenuItem>
+            {deviceType === 'ap' && !device.simulated && (
+              <MenuItem onClick={countryModal.onOpen}>Set Regulatory Country</MenuItem>
+            )}
             <MenuItem onClick={handleRebootClick} hidden={!isCompact}>
               {t('commands.reboot')}
             </MenuItem>
@@ -260,6 +285,14 @@ const DeviceActionDropdown = ({
           </MenuList>
         </Portal>
       </Menu>
+      {countryModal.isOpen && (
+        <RegulatoryCountryModal
+          serialNumber={device.serialNumber}
+          isOpen={countryModal.isOpen}
+          onClose={countryModal.onClose}
+          onSubmitted={handleCountrySubmitted}
+        />
+      )}
     </>
   );
 };
