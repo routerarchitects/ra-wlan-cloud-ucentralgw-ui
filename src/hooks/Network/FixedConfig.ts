@@ -19,7 +19,7 @@ export const useSetFixedCountry = ({ serialNumber }: { serialNumber: string }) =
       });
       const command = response.data;
       // The controller may return HTTP 200 for a command that was not executed.
-      if ((command.status && command.status !== 'completed') || (command.errorCode ?? 0) !== 0) {
+      if (command.status !== 'completed' || (command.errorCode ?? 0) !== 0) {
         throw new Error(command.errorText || `The fixedconfig command was ${command.status ?? 'unsuccessful'}.`);
       }
       return command;

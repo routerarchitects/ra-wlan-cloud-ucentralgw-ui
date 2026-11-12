@@ -173,7 +173,7 @@ export const useControllerStore = create<ControllerStoreState>((set, get) => ({
 
         const eventsToFire = get().eventListeners.filter((event) => {
           if (event.type === 'DEVICE_CONNECTION' || event.type === 'DEVICE_DISCONNECTION') {
-            return event.serialNumber === msg.serialNumber;
+            return event.type === msg.type && event.serialNumber === msg.serialNumber;
           }
           if (msg.type === 'DEVICE_SEARCH_RESULTS' && event.type === 'DEVICE_SEARCH_RESULTS') {
             return true;
